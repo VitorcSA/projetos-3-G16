@@ -3,33 +3,43 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>Calculo da Emissão</title>
+	<title>Cadastro - Sintropia</title>
 </head>
 
 <body>
-	<h1>Calculadora de Emissão</h1>
-	<form id="employees_form">
-		<input type="number" name="employees" placeholder="numero de funcionarios" required>
+	<h1>Crie Sua Conta</h1>
+	<form id="register_form">
+		<input type="text" name="name" placeholder="Seu nome" required>
+		<input type="email" name="email" placeholder="Seu E-mail" required>
+		<input type="password" name="password" placeholder="****" required>
 		<button type="submit">Calcular</button>
 	</form>
 
-	<h2 id="result"></h2>
+	<h2 id="error"></h2>
 
 	<script>
-		document.getElementById("employees_form").addEventListener('submit', function (data) {
+		document.getElementById("register_form").addEventListener('submit', function (data) {
 			data.preventDefault();
 
 			const formData = new FormData(this);
-			const employees = Object.fromEntries(formData.entries());
+			const payload = Object.fromEntries(formData.entries());
 
-			fetch('/api/calculator/compare', {
+			fetch('/api/user/register', {
 				method: 'POST',
 				headers: {'Content-Type': 'application/json'},
-				body: JSON.stringify(employees)
-			}).then(res => res.text())
-				.then(text => {
-					document.getElementById("result").innerText = text;
-				});
+				body: JSON.stringify(payload)
+			}).then(async res => {
+				const text = await res.text();
+
+				if (res.ok) {
+					alert("Cadastro realizado com sucesso");
+
+					window.location.href = 'login.html';
+				} else {
+					document.getElementById("error").innerText = text;
+				}
+
+			});
 		});
 	</script>
 </body>
