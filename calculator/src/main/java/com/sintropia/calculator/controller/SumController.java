@@ -18,4 +18,5 @@ public class SumController {
 		int result = data.num1 + data.num2;
 		return "o resultado da some é: " + result;
 	}
+
 }

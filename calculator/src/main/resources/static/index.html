@@ -1,35 +1,37 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<meta charset="UTF-8">
-	<title>Soma de dois valores</title>
+	<title>Calculo da Emissão</title>
 </head>
+
 <body>
-	<h1>Calculadora de Soma</h1>
-	<form id="numbers input">
-		<input type="number" name="num1" placeholder="Primeiro numero" required>
-		<input type="number" name="num2" placeholder="Segundo numero" required>
+	<h1>Calculadora de Emissão</h1>
+	<form id="employees_form">
+		<input type="number" name="employees" placeholder="numero de funcionarios" required>
 		<button type="submit">Calcular</button>
 	</form>
-	
+
 	<h2 id="result"></h2>
-	
+
 	<script>
-		document.getElementById("numbers input").addEventListener('submit',function(data){
+		document.getElementById("employees_form").addEventListener('submit', function (data) {
 			data.preventDefault();
-			
+
 			const formData = new FormData(this);
-			const numbers = Object.fromEntries(formData.entries());
-			
-			fetch('/sum',{
+			const employees = Object.fromEntries(formData.entries());
+
+			fetch('/api/calculator/compare', {
 				method: 'POST',
 				headers: {'Content-Type': 'application/json'},
-				body: JSON.stringify(numbers)
+				body: JSON.stringify(employees)
 			}).then(res => res.text())
-			.then(text => {
-				document.getElementById("result").innerText = text;
-			});
+				.then(text => {
+					document.getElementById("result").innerText = text;
+				});
 		});
 	</script>
-</body> 
-</html>		
+</body>
+
+</html>
