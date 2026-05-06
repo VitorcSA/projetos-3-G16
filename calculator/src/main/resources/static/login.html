@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Login - Sintropia</title>
+</head>
+
+<body>
+	<h1>Faça login na sua conta</h1>
+	<form id="login_form">
+		<input type="email" name="email" placeholder="Seu E-mail" required>
+		<input type="password" name="password" placeholder="****" required>
+		<button type="submit">Enviar</button>
+	</form>
+
+	<h2 id="error"></h2>
+
+	<script>
+		document.getElementById("login_form").addEventListener('submit', function (data) {
+			data.preventDefault();
+
+			const formData = new FormData(this);
+			const payload = {
+				email: formData.get('email'),
+				password: formData.get('password')
+			};
+
+			fetch('/api/auth/login', {
+				method: 'POST',
+				headers: {'Content-Type': 'application/json'},
+				body: JSON.stringify(payload)
+			}).then(async res => {
+				const text = await res.text();
+
+				if (res.ok) {
+					alert("Login realizado com sucesso");
+					localStorage.setItem('token', text);
+
+					window.location.href = 'index.html';
+				} else {
+					document.getElementById("error").innerText = text;
+				}
+
+			});
+		});
+	</script>
+
+</body>
+
+</html>

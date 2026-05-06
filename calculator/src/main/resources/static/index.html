@@ -1,83 +1,28 @@
 <!DOCTYPE html>
 <html>
+<script>
+	const token = localStorage.getItem('token');
+	if (!token) {
+		window.location.href = 'login.html';
+		return;
+	}
+
+	fetch('/api/auth/validate', {
+		headers: {'Authorization': `Bearer ${token}`}
+	}).then(res => {
+		if (!res.ok) {
+			localStorage.removeItem('token');
+			window.location.href = 'login.html';
+			return;
+		}
+	});
+</script>
 
 <head>
 	<meta charset="UTF-8">
-	<title>Cadastro - Sintropia</title>
+	<title>Home - Sintropia</title>
 </head>
 
-<body>
-	<h1>Crie Sua Conta</h1>
-	<form id="register_form">
-		<input type="text" name="name" placeholder="Seu nome" required>
-		<input type="email" name="email" placeholder="Seu E-mail" required>
-		<input type="password" name="password" placeholder="****" required>
-		<input type="number" name="staff_count" placeholder="Numero de funcionarios" required>
-
-		<input type="text" name="street" placeholder="Rua" required>
-		<input type="text" name="number" placeholder="Numero" required>
-		<input type="text" name="city" placeholder="Cidade" required>
-		<input type="text" name="state" placeholder="Estado" required>
-		<input type="text" name="zip_code" placeholder="Cep" onblur="searchByCep(this)" required>
-
-		<button type="submit">Enviar</button>
-	</form>
-
-	<h2 id="error"></h2>
-
-	<script>
-		document.getElementById("register_form").addEventListener('submit', function (data) {
-			data.preventDefault();
-
-			const formData = new FormData(this);
-			const payload = {
-				name: formData.get('name'),
-				email: formData.get('email'),
-				password: formData.get('password'),
-				staffCount: formData.get('staff_count'),
-				address: {
-					street: formData.get('street'),
-					number: formData.get('number'),
-					city: formData.get('city'),
-					state: formData.get('state'),
-					zipCode: formData.get('zip_code')
-				}
-			};
-
-			fetch('/api/user/register', {
-				method: 'POST',
-				headers: {'Content-Type': 'application/json'},
-				body: JSON.stringify(payload)
-			}).then(async res => {
-				const text = await res.text();
-
-				if (res.ok) {
-					alert("Cadastro realizado com sucesso");
-
-					window.location.href = 'login.html';
-				} else {
-					document.getElementById("error").innerText = text;
-				}
-
-			});
-		});
-
-		async function searchByCep(input) {
-			const form = input.form;
-			const cep = input.value.replace('-', '');
-
-			if (cep.length !== 8) return;
-
-			const res = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-			const data = await res.json();
-
-			if (data.erro) return;
-
-			form.querySelector('[name="street"]').value = data.logradouro;
-			form.querySelector('[name="city"]').value = data.localidade;
-			form.querySelector('[name="state"]').value = data.uf;
-		}
-	</script>
-</body>
+<body></body>
 
 </html>
