@@ -5,8 +5,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.sintropia.calculator.model.Address;
 import com.sintropia.calculator.model.User;
 import com.sintropia.calculator.service.UserService;
+
 
 @RestController
 @RequestMapping("api/user")
@@ -21,10 +24,19 @@ public class UserController{
 	//nome
 	//email
 	//senha
+	//endereco
 	@PostMapping("/register") 
 	public ResponseEntity<String> registerController(@RequestBody RegisterRequestDTO request){
 		try{
-			User newUser = new User(request.name(),request.email(),request.password());
+			Address address = new Address(
+				request.address.street(),
+				request.address.number(),
+				request.address.city(),
+				request.address.state(),
+				request.address.zipCode()
+			);
+
+			User newUser = new User(request.name(),request.email(),request.password(),request.staffCount(),address);
 			service.register(newUser);
 
 			return ResponseEntity.ok("sucess");
@@ -33,7 +45,8 @@ public class UserController{
 		}
 		
 	}
-
-	record RegisterRequestDTO(String name,String email,String password){}
+	
+	public record AddressDTO(String street,String number,String city,String state,String zipCode){}
+	record RegisterRequestDTO(String name,String email,String password,int staffCount,AddressDTO address){}
 
 }

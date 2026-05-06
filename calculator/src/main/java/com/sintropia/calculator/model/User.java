@@ -1,6 +1,7 @@
 package com.sintropia.calculator.model;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,12 +24,21 @@ public class User{
 	@Column(nullable = false)
 	private String password;
 
+	@Column
+	private int staffCount;
+
+	@Embedded
+	@Column(nullable = false)
+	private Address address;
+
 	public User(){}
 
-	public User(String name,String email,String password){
+	public User(String name,String email,String password,int staffCount,Address address){
 		this.name = name;
 		this.email = email;
 		this.password = password;
+		this.staffCount = staffCount;
+		this.address = address;
 	}
 
 	public Long getId(){
@@ -57,5 +67,19 @@ public class User{
 	}
 	public void setPassword(String password){
 		this.password = password;
+	}
+
+	public int getStaffCount(){
+		return this.staffCount;
+	}
+	public void setStaffCount(int staffCount){
+		this.staffCount = staffCount;
+	}
+
+	public Address getAddress(){
+		return this.address;
+	}
+	public void setAddress(Address address){
+		this.address = address;
 	}
 }

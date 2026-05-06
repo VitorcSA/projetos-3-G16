@@ -12,7 +12,15 @@
 		<input type="text" name="name" placeholder="Seu nome" required>
 		<input type="email" name="email" placeholder="Seu E-mail" required>
 		<input type="password" name="password" placeholder="****" required>
-		<button type="submit">Calcular</button>
+		<input type="number" name="staff_count" placeholder="Numero de funcionarios" required>
+
+		<input type="text" name="street" placeholder="Rua" required>
+		<input type="text" name="number" placeholder="Numero" required>
+		<input type="text" name="city" placeholder="Cidade" required>
+		<input type="text" name="state" placeholder="Estado" required>
+		<input type="text" name="zip_code" placeholder="Cep" onblur="searchByCep(this)" required>
+
+		<button type="submit">Enviar</button>
 	</form>
 
 	<h2 id="error"></h2>
@@ -22,7 +30,19 @@
 			data.preventDefault();
 
 			const formData = new FormData(this);
-			const payload = Object.fromEntries(formData.entries());
+			const payload = {
+				name: formData.get('name'),
+				email: formData.get('email'),
+				password: formData.get('password'),
+				staffCount: formData.get('staff_count'),
+				address: {
+					street: formData.get('street'),
+					number: formData.get('number'),
+					city: formData.get('city'),
+					state: formData.get('state'),
+					zipCode: formData.get('zip_code')
+				}
+			};
 
 			fetch('/api/user/register', {
 				method: 'POST',
@@ -41,6 +61,22 @@
 
 			});
 		});
+
+		async function searchByCep(input) {
+			const form = input.form;
+			const cep = input.value.replace('-', '');
+
+			if (cep.length !== 8) return;
+
+			const res = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+			const data = await res.json();
+
+			if (data.erro) return;
+
+			form.querySelector('[name="street"]').value = data.logradouro;
+			form.querySelector('[name="city"]').value = data.localidade;
+			form.querySelector('[name="state"]').value = data.uf;
+		}
 	</script>
 </body>
 
