@@ -2,136 +2,103 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Calculadora de CO₂</title>
-	<style>
-	    body {
-	        font-family: Arial, sans-serif;
-	        background: #eef2f3;
-	        margin: 0;
-	        min-height: 100vh;
-	        display: flex;
-	        justify-content: center;
-	        align-items: center;
-	    }
+    <title>Calculadora CO₂</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #eef2f3;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
 
-	    .container {
-	        background: white;
-	        width: 450px;
-	        padding: 30px;
-	        border-radius: 12px;
-	        box-shadow: 0 0 15px rgba(0,0,0,0.15);
-	    }
+        .container {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            width: 400px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        }
 
-	    h2 {
-	        text-align: center;
-	        margin-bottom: 20px;
-	    }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
 
-	    h4 {
-	        margin-top: 15px;
-	        margin-bottom: 5px;
-	        color: #2e7d32;
-	    }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: green;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
 
-	    label {
-	        font-size: 14px;
-	    }
+        button:hover {
+            background: darkgreen;
+        }
 
-	    input {
-	        width: 100%;
-	        padding: 10px;
-	        margin: 6px 0 12px 0;
-	        border: 1px solid #ccc;
-	        border-radius: 6px;
-	        box-sizing: border-box;
-	        font-size: 14px;
-	    }
-
-	    button {
-	        width: 100%;
-	        padding: 12px;
-	        background: #2e7d32;
-	        color: white;
-	        border: none;
-	        border-radius: 6px;
-	        cursor: pointer;
-	        font-size: 16px;
-	        margin-top: 10px;
-	    }
-
-	    button:hover {
-	        background: #1b5e20;
-	    }
-
-	    .resultado {
-	        margin-top: 20px;
-	        font-weight: bold;
-	        text-align: center;
-	        font-size: 15px;
-	        line-height: 1.6;
-	    }
-	</style>
+        #resultado {
+            margin-top: 15px;
+            font-weight: bold;
+            text-align: center;
+            line-height: 1.6;
+        }
+    </style>
 </head>
 <body>
 
 <div class="container">
     <h2>Calculadora de CO₂</h2>
 
-    <h4>🚗 Transporte</h4>
-    <label>Distância (km)</label>
-    <input type="number" id="distancia">
+    <button type="button" onclick="calcular()">Calcular</button>
 
-    <label>Consumo (km/L)</label>
-    <input type="number" id="consumo">
-
-    <label>Fator CO₂ combustível (kg/L)</label>
-    <input type="number" id="fatorComb" value="2.3">
-
-    <h4>🗑️ Lixo</h4>
-    <label>Quantidade de lixo (kg)</label>
-    <input type="number" id="lixo">
-
-    <label>Fator CO₂ lixo (kg CO₂/kg)</label>
-    <input type="number" id="fatorLixo" value="1.2">
-
-    <h4>⚡ Energia</h4>
-    <label>Consumo de energia (kWh)</label>
-    <input type="number" id="energia">
-
-    <label>Fator CO₂ energia (kg CO₂/kWh)</label>
-    <input type="number" id="fatorEnergia" value="0.5">
-
-    <button onclick="calcularCO2()">Calcular</button>
-
-    <div class="resultado" id="resultado"></div>
+    <div id="resultado"></div>
 </div>
 
 <script>
-function calcularCO2() {
-    let distancia = parseFloat(document.getElementById("distancia").value) || 0;
-    let consumo = parseFloat(document.getElementById("consumo").value) || 0;
-    let fatorComb = parseFloat(document.getElementById("fatorComb").value) || 0;
+function calcular() {
+    const token = localStorage.getItem("token");
 
-    let lixo = parseFloat(document.getElementById("lixo").value) || 0;
-    let fatorLixo = parseFloat(document.getElementById("fatorLixo").value) || 0;
+    if (!token) {
+        document.getElementById("resultado").innerHTML =
+            "❌ Token JWT não encontrado. Faça login novamente.";
+        return;
+    }
 
-    let energia = parseFloat(document.getElementById("energia").value) || 0;
-    let fatorEnergia = parseFloat(document.getElementById("fatorEnergia").value) || 0;
+    fetch("/api/calculator/calcular", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            // Envia o JWT no cabeçalho Authorization
+            "Authorization": "Bearer " + token
+        },
+        body: JSON.stringify({})
+    })
+    .then(async res => {
+        const text = await res.text();
 
-    let litros = consumo > 0 ? distancia / consumo : 0;
-    let co2Transporte = litros * fatorComb;
+        if (!res.ok) {
+            throw new Error(text || "Erro na requisição");
+        }
 
-    let co2Lixo = lixo * fatorLixo;
-
-    let co2Energia = energia * fatorEnergia;
-
-    let total = co2Transporte + co2Lixo + co2Energia;
-
-    document.getElementById("resultado").innerHTML =
-        "🚗 Transporte: " + co2Transporte.toFixed(2) + " kg<br>" +
-        "🗑️ Lixo: " + co2Lixo.toFixed(2) + " kg<br>" +
-        "⚡ Energia: " + co2Energia.toFixed(2) + " kg<br><br>" +
-        "🌍 TOTAL: " + total.toFixed(2) + " kg de CO₂";
+        return JSON.parse(text);
+    })
+    .then(data => {
+        document.getElementById("resultado").innerHTML =
+            "🌍 Emissão Física: " + data.emissaoCartaoFisico.toFixed(2) + " kg<br>" +
+            "⚡ Emissão Digital: " + data.emissaoCartaoDigital.toFixed(2) + " kg<br>" +
+            "📉 Diferença: " + data.diferenca.toFixed(2) + " kg<br>" +
+            "📊 Redução: " + data.percentualReducao.toFixed(2) + "%";
+    })
+    .catch(err => {
+        document.getElementById("resultado").innerHTML =
+            "❌ " + err.message;
+        console.error(err);
+    });
 }
 </script>
 

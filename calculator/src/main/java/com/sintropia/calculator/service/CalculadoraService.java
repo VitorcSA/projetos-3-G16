@@ -1,23 +1,64 @@
+package com.sintropia.calculator.service;
+
 import org.springframework.stereotype.Service;
+
 import com.sintropia.calculator.dto.CalculoRequestDTO;
 import com.sintropia.calculator.dto.CalculoResponseDTO;
+import com.sintropia.calculator.model.Calculo;          // Entidade do banco
+import com.sintropia.calculator.repository.CalculoRepository; // Repository
 
 @Service
 public class CalculadoraService {
 
+    private static final double FATOR_PVC = 2.7;
+    private static final double FATOR_TRANSPORTE = 0.21;
+    private static final double FATOR_ENERGIA = 0.084;
+
+    private final CalculoRepository repository;
+
+    public CalculadoraService(CalculoRepository repository) {
+        this.repository = repository;
+    }
+
+    public CalculoRequestDTO buscarDadosDoBanco() {
+        Calculo calculo = repository.findTopByOrderByIdDesc();
+
+        CalculoRequestDTO dto = new CalculoRequestDTO();
+
+        if (calculo == null) {
+            dto.setPesoPvc(1000.0);
+            dto.setDistanciaTransporteKm(250.0);
+            dto.setConsumoEnergiaKwh(10.0);
+            return dto;
+        }
+
+        dto.setPesoPvc(calculo.getPesoPvc());
+        dto.setDistanciaTransporteKm(calculo.getDistanciaTransporteKm());
+        dto.setConsumoEnergiaKwh(calculo.getConsumoEnergiaKwh());
+
+        return dto;
+    }
+
     public CalculoResponseDTO calcular(CalculoRequestDTO request) {
 
+        double pesoPvc = Math.max(request.getPesoPvc(), 0);
+        double distanciaKm = Math.max(request.getDistanciaTransporteKm(), 0);
+        double energiaKwh = Math.max(request.getConsumoEnergiaKwh(), 0);
+
         double emissaoFisico =
-                (request.getPesoPvc() / 1000 * 2.7) +
-                (request.getDistanciaTransporteKm() * 0.21);
+                ((pesoPvc / 1000.0) * FATOR_PVC) +
+                (distanciaKm * FATOR_TRANSPORTE);
 
         double emissaoDigital =
-                (request.getConsumoEnergiaKwh() * 0.084);
+                (energiaKwh * FATOR_ENERGIA);
 
         double diferenca = emissaoFisico - emissaoDigital;
 
-        double percentualReducao =
-                (diferenca / emissaoFisico) * 100;
+        double percentualReducao = 0;
+
+        if (emissaoFisico > 0) {
+            percentualReducao = (diferenca / emissaoFisico) * 100;
+        }
 
         CalculoResponseDTO response = new CalculoResponseDTO();
         response.setEmissaoCartaoFisico(emissaoFisico);
