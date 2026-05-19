@@ -30,11 +30,13 @@
         button {
             width: 100%;
             padding: 12px;
+            margin-top: 10px;
             background: green;
             color: white;
             border: none;
             cursor: pointer;
             font-size: 16px;
+            border-radius: 5px;
         }
 
         button:hover {
@@ -56,12 +58,20 @@
 
     <button type="button" onclick="calcular()">Calcular</button>
 
+    <button type="button" onclick="exportarCSV()">Exportar CSV</button>
+
+    <button type="button" onclick="exportarPDF()">Exportar PDF</button>
+
     <div id="resultado"></div>
 </div>
 
 <script>
+function getToken() {
+    return localStorage.getItem("token");
+}
+
 function calcular() {
-    const token = localStorage.getItem("token");
+    const token = getToken();
 
     if (!token) {
         document.getElementById("resultado").innerHTML =
@@ -73,7 +83,6 @@ function calcular() {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            // Envia o JWT no cabeçalho Authorization
             "Authorization": "Bearer " + token
         },
         body: JSON.stringify({})
@@ -97,6 +106,88 @@ function calcular() {
     .catch(err => {
         document.getElementById("resultado").innerHTML =
             "❌ " + err.message;
+        console.error(err);
+    });
+}
+
+function exportarCSV() {
+    const token = getToken();
+
+    if (!token) {
+        alert("Token JWT não encontrado. Faça login novamente.");
+        return;
+    }
+
+    fetch("/api/calculator/export/csv", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+        },
+        body: JSON.stringify({})
+    })
+    .then(res => {
+        if (!res.ok) {
+            throw new Error("Erro ao gerar CSV");
+        }
+        return res.blob();
+    })
+    .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+
+        a.href = url;
+        a.download = "resultado_co2.csv";
+
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+
+        window.URL.revokeObjectURL(url);
+    })
+    .catch(err => {
+        alert(err.message);
+        console.error(err);
+    });
+}
+
+function exportarPDF() {
+    const token = getToken();
+
+    if (!token) {
+        alert("Token JWT não encontrado. Faça login novamente.");
+        return;
+    }
+
+    fetch("/api/calculator/export/pdf", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+        },
+        body: JSON.stringify({})
+    })
+    .then(res => {
+        if (!res.ok) {
+            throw new Error("Erro ao gerar PDF");
+        }
+        return res.blob();
+    })
+    .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+
+        a.href = url;
+        a.download = "resultado_co2.pdf";
+
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+
+        window.URL.revokeObjectURL(url);
+    })
+    .catch(err => {
+        alert(err.message);
         console.error(err);
     });
 }
