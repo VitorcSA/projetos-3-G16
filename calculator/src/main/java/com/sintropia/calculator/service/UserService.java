@@ -30,10 +30,21 @@ public class UserService{
 	
 		return repository.save(user);
 	}
+	
+    public User updateDigitalCardPercentage(Long userId, Double percentage) {
+        User user = repository.findById(userId)
+            .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        
+        user.setDigitalPercentage(percentage);
+        return repository.save(user);
+    }
 
 	public User findByEmail(String email){
 		return repository.findByEmail(email).orElse(null);
 	}
 
+	public User findByName(String name) {
+		return repository.findByName(name).orElse(null);
+	}
 
 }

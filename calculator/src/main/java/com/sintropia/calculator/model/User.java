@@ -30,6 +30,9 @@ public class User{
 	@Embedded
 	@Column(nullable = false)
 	private Address address;
+	
+	@Column
+	private Double digitalPercentage;
 
 	public User(){}
 
@@ -39,6 +42,12 @@ public class User{
 		this.password = password;
 		this.staffCount = staffCount;
 		this.address = address;
+	}
+	
+	public User(String name,String email,String password,int staffCount,Address address,Double 
+			porcentOfDigital){
+		this(name,email,password,staffCount,address);
+		this.digitalPercentage = porcentOfDigital;
 	}
 
 	public Long getId(){
@@ -82,4 +91,11 @@ public class User{
 	public void setAddress(Address address){
 		this.address = address;
 	}
+	public void setDigitalPercentage(Double porcentOfDigital){
+		this.digitalPercentage = porcentOfDigital;
+	}
+	public Double getDigitalPercentage(){
+		return this.digitalPercentage;
+	}
+	
 }

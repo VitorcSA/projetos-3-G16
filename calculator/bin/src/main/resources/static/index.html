@@ -3,45 +3,48 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>Cadastro - Sintropia</title>
+	<title>Home - Sintropia</title>
 </head>
 
 <body>
-	<h1>Crie Sua Conta</h1>
-	<form id="register_form">
-		<input type="text" name="name" placeholder="Seu nome" required>
-		<input type="email" name="email" placeholder="Seu E-mail" required>
-		<input type="password" name="password" placeholder="****" required>
-		<button type="submit">Calcular</button>
-	</form>
 
-	<h2 id="error"></h2>
+	<h1>Bem-vindo à Sintropia </h1>
+
+	<button onclick="irParaCalculadora()">Ir para Calculadora</button>
 
 	<script>
-		document.getElementById("register_form").addEventListener('submit', function (data) {
-			data.preventDefault();
+		document.addEventListener("DOMContentLoaded", function () {
 
-			const formData = new FormData(this);
-			const payload = Object.fromEntries(formData.entries());
+			const token = localStorage.getItem('token');
 
-			fetch('/api/user/register', {
-				method: 'POST',
-				headers: {'Content-Type': 'application/json'},
-				body: JSON.stringify(payload)
-			}).then(async res => {
-				const text = await res.text();
+			if (!token) {
+				window.location.href = 'login.html';
+				return;
+			}
 
-				if (res.ok) {
-					alert("Cadastro realizado com sucesso");
-
-					window.location.href = 'login.html';
-				} else {
-					document.getElementById("error").innerText = text;
+			fetch('/api/auth/validate', {
+				headers: {
+					'Authorization': `Bearer ${token}`
 				}
+			})
+				.then(response => {
+					if (!response.ok) {
+						localStorage.removeItem('token');
+						window.location.href = 'login.html';
+					}
+				})
+				.catch(() => {
+					localStorage.removeItem('token');
+					window.location.href = 'login.html';
+				});
 
-			});
 		});
+
+		function irParaCalculadora() {
+			window.location.href = 'calculator.html';
+		}
 	</script>
+
 </body>
 
 </html>

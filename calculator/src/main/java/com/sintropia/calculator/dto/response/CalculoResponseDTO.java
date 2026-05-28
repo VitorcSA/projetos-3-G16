@@ -1,4 +1,4 @@
-package com.sintropia.calculator.dto;
+package com.sintropia.calculator.dto.response;
 
 public class CalculoResponseDTO {
 

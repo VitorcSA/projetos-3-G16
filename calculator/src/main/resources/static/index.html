@@ -2,6 +2,29 @@
 <html>
 
 <head>
+	<script>
+		const token = localStorage.getItem('token');
+
+		if(!token){
+			window.location.href = 'login.html'
+			return;
+		}
+		
+		fetch('/api/auth/validate', {
+			headers: {
+				'Authorization': `Bearer ${token}`
+			}
+		}).then(response => {
+			if(!response.ok){
+				localStorage.removeItem('token');
+				window.location.href = 'login.html';
+			}
+		}).catch(() => {
+			localStorage.removeItem('token');
+			window.location.href = 'login.html';
+		});
+	</script>
+	
 	<meta charset="UTF-8">
 	<title>Home - Sintropia</title>
 </head>
@@ -10,40 +33,7 @@
 
 	<h1>Bem-vindo à Sintropia </h1>
 
-	<button onclick="irParaCalculadora()">Ir para Calculadora</button>
-
-	<script>
-		document.addEventListener("DOMContentLoaded", function () {
-
-			const token = localStorage.getItem('token');
-
-			if (!token) {
-				window.location.href = 'login.html';
-				return;
-			}
-
-			fetch('/api/auth/validate', {
-				headers: {
-					'Authorization': `Bearer ${token}`
-				}
-			})
-				.then(response => {
-					if (!response.ok) {
-						localStorage.removeItem('token');
-						window.location.href = 'login.html';
-					}
-				})
-				.catch(() => {
-					localStorage.removeItem('token');
-					window.location.href = 'login.html';
-				});
-
-		});
-
-		function irParaCalculadora() {
-			window.location.href = 'calculator.html';
-		}
-	</script>
+	<button onclick="window.location.href = 'calculator.html'">Ir para Calculadora</button>
 
 </body>
 

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sintropia.calculator.dto.request.LoginDTO;
 import com.sintropia.calculator.model.User;
 import com.sintropia.calculator.service.JwtService;
 import com.sintropia.calculator.service.UserService;
@@ -42,8 +43,6 @@ public class AuthController{
 		String token = jwtService.generateToken(user.getEmail());
 		return ResponseEntity.ok(token);
 	}
-
-	record LoginDTO(String email,String password){}
 
 	@GetMapping("/validate")
 	public ResponseEntity<String> validate(@RequestHeader("Authorization") String header){

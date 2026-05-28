@@ -2,8 +2,8 @@ package com.sintropia.calculator.service;
 
 import org.springframework.stereotype.Service;
 
-import com.sintropia.calculator.dto.CalculoRequestDTO;
-import com.sintropia.calculator.dto.CalculoResponseDTO;
+import com.sintropia.calculator.dto.request.CalculoRequestDTO;
+import com.sintropia.calculator.dto.response.CalculoResponseDTO;
 import com.sintropia.calculator.model.Calculo;
 import com.sintropia.calculator.repository.CalculoRepository;
 

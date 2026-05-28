@@ -13,4 +13,5 @@ public class CartaoDigital {
     private Long id;
 
     private double consumoEnergiaKwh;
+   
 }
