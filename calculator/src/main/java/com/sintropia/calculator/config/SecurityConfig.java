@@ -35,12 +35,18 @@ public class SecurityConfig{
 					"/api/user/register",
 					"/register",
 					"/login",
+					"/error/**",
 					"/css/**",
 					"/js/**",
 					"/images/**"
 				).permitAll()
 				.anyRequest().authenticated()
 			)
+			.exceptionHandling(ex -> ex
+		            .authenticationEntryPoint((request, response, authException) -> {
+		                response.sendRedirect("/login");
+		            })
+		    )
 			.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 		return http.build();
 	}

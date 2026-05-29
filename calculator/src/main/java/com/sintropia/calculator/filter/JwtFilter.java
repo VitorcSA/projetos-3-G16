@@ -2,8 +2,11 @@ package com.sintropia.calculator.filter;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -40,6 +43,13 @@ public class JwtFilter extends OncePerRequestFilter {
 		}
 		
 		if(token == null){
+			SecurityContextHolder.getContext().setAuthentication(
+					new AnonymousAuthenticationToken(
+							"anonymous",
+							"anonymousUser",
+							List.of(new SimpleGrantedAuthority("ROLE_ANONYMOUS"))
+					)
+			);
 	        chain.doFilter(request, response);
 	        return;
 	    }
@@ -47,7 +57,7 @@ public class JwtFilter extends OncePerRequestFilter {
 		String email = jwtService.extractEmail(token);
 		
 		if(email != null && SecurityContextHolder.getContext().getAuthentication() == null){
-			UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(email, null, new ArrayList<>());
+			UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(email, null, List.of(new SimpleGrantedAuthority("ROLE_USER")));
 			SecurityContextHolder.getContext().setAuthentication(auth);
 		}
 			
