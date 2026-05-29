@@ -1,16 +1,18 @@
 package com.sintropia.calculator.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sintropia.calculator.dto.AddressDTO;
 import com.sintropia.calculator.dto.request.RegisterRequestDTO;
-import com.sintropia.calculator.model.Address;
+import com.sintropia.calculator.dto.response.UserProfileDTO;
 import com.sintropia.calculator.model.User;
 import com.sintropia.calculator.service.UserService;
-
 
 @RestController
 @RequestMapping("api/user")
@@ -22,25 +24,47 @@ public class UserController{
 		this.service = service;
 	}
 
-	@PostMapping("/register") 
-	public ResponseEntity<String> registerController(@RequestBody RegisterRequestDTO request){
-		try{
-			Address address = new Address(
-				request.address().street(),
-				request.address().number(),
-				request.address().city(),
-				request.address().state(),
-				request.address().zipCode()
+	@GetMapping("/profile")
+	public ResponseEntity<?> getUserProfile(@AuthenticationPrincipal String email){
+		User user = service.findByEmail(email);
+		
+		if(user == null) {
+			return ResponseEntity.status(404).body("Usuario não encontrado");
+		}
+	
+		AddressDTO addressDTO = null;
+		if(user.getAddress() != null) {
+			addressDTO = new AddressDTO(
+					user.getAddress().getStreet(),
+					user.getAddress().getNumber(),
+					user.getAddress().getCity(),
+					user.getAddress().getState(),
+					user.getAddress().getZipCode()
 			);
-
-			User newUser = new User(request.name(),request.email(),request.password(),request.staffCount(),address);
-			service.register(newUser);
-
-			return ResponseEntity.ok("sucess");
-		}catch (IllegalArgumentException error){
-			return ResponseEntity.badRequest().body(error.getMessage());
 		}
 		
+		UserProfileDTO profile = new UserProfileDTO(
+		        user.getName(),
+		        user.getEmail(),
+		        user.getStaffCount(),
+		        addressDTO
+		    );
+		
+		return ResponseEntity.ok(profile);
 	}
-
+	
+	@PutMapping("/profile")
+	public ResponseEntity<String> updateUserProfile(@AuthenticationPrincipal String email, @RequestBody RegisterRequestDTO updatedProfile) {
+		try {
+			service.updateProfile(email, updatedProfile);
+			return ResponseEntity.ok("Perfil atualizado com sucesso!");
+			
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+			
+		} catch (Exception e) {
+			return ResponseEntity.status(500).body("Erro ao atualizar o perfil: " + e.getMessage());
+		}
+	}
+	
 }

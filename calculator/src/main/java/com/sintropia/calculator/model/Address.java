@@ -20,38 +20,38 @@ public class Address{
 		this.zipCode = zipCode;
 	}
 
-	String getStreet(){
+	public String getStreet(){
 		return this.street;
 	}
-	void setStreet(String street){
+	public void setStreet(String street){
 		this.street = street;
 	}
 
-	String getNumber(){
+	public String getNumber(){
 		return this.number;
 	}
-	void setNumber(String number){
+	public void setNumber(String number){
 		this.number = number;
 	}
 
-	String getCity(){
+	public String getCity(){
 		return this.city;
 	}
-	void setCity(String city){
+	public void setCity(String city){
 		this.city = city;
 	}
 
-	String getState(){
+	public String getState(){
 		return this.state;
 	}
-	void setState(String state){
+	public void setState(String state){
 		this.state = state;
 	}
 
-	String getZipCode(){
+	public String getZipCode(){
 		return this.zipCode;
 	}
-	void setZipCode(String zipCode){
+	public void setZipCode(String zipCode){
 		this.zipCode = zipCode;
 	}
 }

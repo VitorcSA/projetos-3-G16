@@ -16,6 +16,8 @@
 
 	<h2 id="error"></h2>
 
+	<a href="/register">Não tem uma conta?</a>
+	
 	<script>
 		document.getElementById("login_form").addEventListener('submit', function (data) {
 			data.preventDefault();
@@ -34,10 +36,8 @@
 				const text = await res.text();
 
 				if (res.ok) {
-					alert("Login realizado com sucesso");
-					localStorage.setItem('token', text);
-
-					window.location.href = 'index.html';
+					alert(text);
+					window.location.href = '/';
 				} else {
 					document.getElementById("error").innerText = text;
 				}

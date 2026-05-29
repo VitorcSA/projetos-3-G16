@@ -12,6 +12,7 @@ import com.sintropia.calculator.service.JwtService;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -27,22 +28,40 @@ public class JwtFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request,HttpServletResponse response,FilterChain chain) throws ServletException, IOException {
 
-		String authHeader = request.getHeader("Authorization");
-
-		if(authHeader == null || !authHeader.startsWith("Bearer ")){
-			chain.doFilter(request, response);
-			return;
+		String token = null;
+		
+		if(request.getCookies() != null) {
+			for(Cookie cookie : request.getCookies()) {
+				if("AUTH_TOKEN".equals(cookie.getName())) {
+					token = cookie.getValue();
+					break;
+				}	
+			}
 		}
+		
+		if(token == null){
+	        chain.doFilter(request, response);
+	        return;
+	    }
 
-		String token = authHeader.substring(7);
 		String email = jwtService.extractEmail(token);
-
+		
 		if(email != null && SecurityContextHolder.getContext().getAuthentication() == null){
 			UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(email, null, new ArrayList<>());
 			SecurityContextHolder.getContext().setAuthentication(auth);
 		}
-
+			
 		chain.doFilter(request, response);
-
+	}
+	
+	@Override
+	protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+	    String path = request.getRequestURI();
+	    
+	    return path.equals("/api/auth/login") || 
+	           path.equals("/api/auth/register") || 
+	           path.equals("/api/auth/validate") ||
+	           path.equals("/login") ||
+	           path.equals("/register");
 	}
 }

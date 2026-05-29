@@ -33,8 +33,8 @@ public class SecurityConfig{
 					"/api/auth/validate",
 					"/api/auth/login",
 					"/api/user/register",
-					"/",
-					"/*.html",
+					"/register",
+					"/login",
 					"/css/**",
 					"/js/**",
 					"/images/**"

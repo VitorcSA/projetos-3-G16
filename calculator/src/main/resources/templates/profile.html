@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<script src="js/validate.js"></script>
+	
+	<meta charset="UTF-8">
+	<title>Home - Sintropia</title>
+</head>
+
+<body>
+
+	<a href="/">home</a>
+	
+	<h1>Sua Area</h1>
+
+	<form id="profile_form">
+		<input type="text" name="name" placeholder="Seu nome">
+		<input type="email" name="email" placeholder="Seu E-mail">
+		<input type="password" name="password" placeholder="****">
+		<input type="number" name="staff_count" placeholder="Numero de funcionarios">
+
+		<input type="text" name="street" placeholder="Rua" required>
+		<input type="text" name="number" placeholder="Numero" required>
+		<input type="text" name="city" placeholder="Cidade" required>
+		<input type="text" name="state" placeholder="Estado" required>
+		<input type="text" name="zip_code" placeholder="Cep" onblur="searchByCep(this)" required>
+
+		<button type="submit">Enviar</button>
+	</form>
+	
+	
+	<script>
+		document.addEventListener('DOMContentLoaded',() => {
+			fetch('/api/user/profile').then(response =>{
+				if(!response.ok){
+					window.location.replace('/login');
+					return;
+				}
+				return response.json();
+			}).then(data => {
+				
+				
+				const form = document.getElementById('profile_form');
+				
+				if(data){
+					form.name.value = data.name;
+					form.email.value = data.email;
+					form.staff_count.value = data.staffCount;
+				
+					if(data.address){
+						form.street.value = data.address.street;
+						form.number.value = data.address.number;
+						form.city.value = data.address.city;
+						form.state.value = data.address.state;
+						form.zip_code.value = data.address.zipCode;
+					}
+				}
+				
+				form.addEventListener("submit",event => {
+					event.preventDefault();
+					
+					const payload = {
+						name: form.name.value,
+						email: form.email.value,
+						password: form.password.value,
+						staffCount: form.staff_count.value,
+						address: {
+							street: form.street.value,
+							number: form.number.value,
+							city: form.city.value,
+							state: form.state.value,
+							zipCode: form.zip_code.value
+						}
+					};
+					
+					fetch('/api/user/profile',{
+						method: `PUT`,
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						body: JSON.stringify(payload)
+					}).then(async response => {
+						const text = await response.text();
+						
+						if(response.ok){
+							alert(text);
+						}else{
+							alert(text);
+						}
+					}).catch(error => {
+						alert("Erro");
+					});
+				});
+			
+			}).catch(() => {
+				window.location.replace('/login');
+			});
+		});
+	</script>
+</body>
+
+
+
+</html>

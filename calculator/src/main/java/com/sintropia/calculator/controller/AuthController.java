@@ -1,18 +1,24 @@
 package com.sintropia.calculator.controller;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sintropia.calculator.dto.request.LoginDTO;
+import com.sintropia.calculator.dto.request.RegisterRequestDTO;
+import com.sintropia.calculator.model.Address;
 import com.sintropia.calculator.model.User;
 import com.sintropia.calculator.service.JwtService;
 import com.sintropia.calculator.service.UserService;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("api/auth")
@@ -29,7 +35,7 @@ public class AuthController{
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<String> login(@RequestBody LoginDTO request){
+	public ResponseEntity<String> login(@RequestBody LoginDTO request, HttpServletResponse response){
 		User user = userService.findByEmail(request.email());
 
 		if(user == null){
@@ -41,13 +47,42 @@ public class AuthController{
 		}
 
 		String token = jwtService.generateToken(user.getEmail());
-		return ResponseEntity.ok(token);
+		addCookie(response, token);
+		
+		return ResponseEntity.ok("Login efetuado com sucesso");
+	}
+	
+	@PostMapping("/register") 
+	public ResponseEntity<String> registerController(@RequestBody RegisterRequestDTO request, HttpServletResponse response){
+		try{
+			Address address = new Address(
+				request.address().street(),
+				request.address().number(),
+				request.address().city(),
+				request.address().state(),
+				request.address().zipCode()
+			);
+
+			User newUser = new User(request.name(),request.email(),request.password(),request.staffCount(),address);
+			userService.register(newUser);
+			
+			String token = jwtService.generateToken(newUser.getEmail());
+			addCookie(response, token);
+
+			return ResponseEntity.ok("Usuário registrado e logado com sucesso");
+		}catch (IllegalArgumentException error){
+			return ResponseEntity.badRequest().body(error.getMessage());
+		}
+		
 	}
 
 	@GetMapping("/validate")
-	public ResponseEntity<String> validate(@RequestHeader("Authorization") String header){
+	public ResponseEntity<String> validate(@CookieValue(name = "AUTH_TOKEN", required = false) String token){
+		if(token == null) {
+			return ResponseEntity.status(401).body("Token não encontrado ou expirado");
+		}
+		
 		try{
-			String token = header.substring(7);
 			String email = jwtService.extractEmail(token);
 			if(email == null){
 				return ResponseEntity.status(401).body("Token Invalido");
@@ -58,4 +93,15 @@ public class AuthController{
 		}
 	}
 
+	private void addCookie(HttpServletResponse response, String token) {
+        ResponseCookie cookie = ResponseCookie.from("AUTH_TOKEN", token)
+                .httpOnly(true)
+                .secure(false)
+                .path("/")
+                .maxAge(24 * 60 * 60)
+                .sameSite("Strict")
+                .build();
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+    }
+	
 }
