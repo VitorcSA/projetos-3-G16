@@ -13,6 +13,7 @@
 		<input type="email" name="email" placeholder="Seu E-mail" required>
 		<input type="password" name="password" placeholder="****" required>
 		<input type="number" name="staff_count" placeholder="Numero de funcionarios" required>
+		<input type="number" name="digital_staff_count" placeholder="Numero de funcionarios com cartão digital">
 
 		<input type="text" name="street" placeholder="Rua" required>
 		<input type="text" name="number" placeholder="Numero" required>
@@ -43,7 +44,8 @@
 					city: formData.get('city'),
 					state: formData.get('state'),
 					zipCode: formData.get('zip_code')
-				}
+				},
+				digitalCardStaffCount: formData.get('digital_staff_count') ? parseInt(formData.get('digital_staff_count')) : null;
 			};
 
 			fetch('/api/auth/register', {

@@ -24,19 +24,19 @@ public class User{
 	@Column(nullable = false)
 	private String password;
 
-	@Column
-	private int staffCount;
+	@Column(nullable = false)
+	private Integer staffCount;
 
 	@Embedded
 	@Column(nullable = false)
 	private Address address;
 	
-	@Column
+	@Column(nullable = true)
 	private Double digitalPercentage;
 
 	public User(){}
 
-	public User(String name,String email,String password,int staffCount,Address address){
+	public User(String name,String email,String password,Integer staffCount,Address address){
 		this.name = name;
 		this.email = email;
 		this.password = password;
@@ -44,7 +44,7 @@ public class User{
 		this.address = address;
 	}
 	
-	public User(String name,String email,String password,int staffCount,Address address,Double 
+	public User(String name,String email,String password,Integer staffCount,Address address,Double 
 			porcentOfDigital){
 		this(name,email,password,staffCount,address);
 		this.digitalPercentage = porcentOfDigital;

@@ -55,6 +55,15 @@ public class AuthController{
 	@PostMapping("/register") 
 	public ResponseEntity<String> registerController(@RequestBody RegisterRequestDTO request, HttpServletResponse response){
 		try{
+			if (request.digitalCardStaffCount() != null) {
+				if (request.digitalCardStaffCount() < 0) {
+					return ResponseEntity.badRequest().body("O número de usuários do cartão não pode ser negativo");
+				}
+				if (request.staffCount() != null && request.digitalCardStaffCount() > request.staffCount()) {
+					return ResponseEntity.badRequest().body("O número de usuários do cartão não pode ser maior que o total de funcionários");
+				}
+			}
+
 			Address address = new Address(
 				request.address().street(),
 				request.address().number(),
@@ -63,17 +72,23 @@ public class AuthController{
 				request.address().zipCode()
 			);
 
-			User newUser = new User(request.name(),request.email(),request.password(),request.staffCount(),address);
-			userService.register(newUser);
+			User user = new User(request.name(), request.email(), request.password(), request.staffCount(), address);
+
+			if (request.digitalCardStaffCount() != null && request.staffCount() != null && request.staffCount() > 0) {
+				double percentage = ((double) request.digitalCardStaffCount() / request.staffCount()) * 100.0;
+				user.setDigitalPercentage(percentage);
+			}
+
+			userService.register(user);
 			
-			String token = jwtService.generateToken(newUser.getEmail());
+			String token = jwtService.generateToken(user.getEmail());
 			addCookie(response, token);
 
 			return ResponseEntity.ok("Usuário registrado e logado com sucesso");
-		}catch (IllegalArgumentException error){
+			
+		} catch (IllegalArgumentException error){
 			return ResponseEntity.badRequest().body(error.getMessage());
 		}
-		
 	}
 
 	@GetMapping("/validate")

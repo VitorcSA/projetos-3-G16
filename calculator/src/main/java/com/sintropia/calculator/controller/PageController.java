@@ -32,4 +32,9 @@ public class PageController{
 		return "profile";
 	}
 	
+	@GetMapping("/calculator")
+	public String calculator() {
+		return "calculator";
+	}
+	
 }

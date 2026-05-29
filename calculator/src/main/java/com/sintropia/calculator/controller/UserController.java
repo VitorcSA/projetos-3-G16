@@ -43,11 +43,14 @@ public class UserController{
 			);
 		}
 		
+		Long digitalCardStaffCount = (user.getDigitalPercentage() != null) ? Math.round((user.getDigitalPercentage() * user.getStaffCount()) / 100.0) : null;
+		
 		UserProfileDTO profile = new UserProfileDTO(
 		        user.getName(),
 		        user.getEmail(),
 		        user.getStaffCount(),
-		        addressDTO
+		        addressDTO,
+		        digitalCardStaffCount
 		    );
 		
 		return ResponseEntity.ok(profile);
@@ -61,7 +64,6 @@ public class UserController{
 			
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
-			
 		} catch (Exception e) {
 			return ResponseEntity.status(500).body("Erro ao atualizar o perfil: " + e.getMessage());
 		}
