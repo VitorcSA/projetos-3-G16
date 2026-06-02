@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
 					state: form.state.value,
 					zipCode: form.zip_code.value
 				},
-				digitalCardStaffCount: form.digital_staff_count.value ? parseInt(form.get('digital_staff_count')) : null
+				digitalCardStaffCount: form.digital_staff_count.value ? parseInt(form.digital_staff_count.value) : null
 			};
 
 			fetch('/api/user/profile', {
