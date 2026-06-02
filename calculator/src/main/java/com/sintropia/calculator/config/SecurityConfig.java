@@ -32,7 +32,7 @@ public class SecurityConfig{
 				.requestMatchers(
 					"/api/auth/validate",
 					"/api/auth/login",
-					"/api/user/register",
+					"/api/auth/register",
 					"/register",
 					"/login",
 					"/error/**",

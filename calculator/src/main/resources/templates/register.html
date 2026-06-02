@@ -45,7 +45,7 @@
 					state: formData.get('state'),
 					zipCode: formData.get('zip_code')
 				},
-				digitalCardStaffCount: formData.get('digital_staff_count') ? parseInt(formData.get('digital_staff_count')) : null;
+				digitalCardStaffCount: formData.get('digital_staff_count') ? parseInt(formData.get('digital_staff_count')) : null
 			};
 
 			fetch('/api/auth/register', {
