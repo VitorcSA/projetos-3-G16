@@ -1,13 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 :root {
-    --cor-fundo: #f3f4f6;
-    --cor-primaria: #3b82f6;
-    --cor-texto: #1f2937;
-    --borda-padrao: 6px;
+    --background-color: #f3f4f6;
+    --primary-color: #D52B1E;
+	--primary-color-dark: #B52419;
+	--link-color: #277D5F;
+	--link-color-dark:#1f6b50;
+    --text-color: #1f2937;
 }
 
 *{
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
-	font-family: Inter,'Segou UI', Tahoma, Geneva, Verdana, sans-serif;	
+	font-family: Inter, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
