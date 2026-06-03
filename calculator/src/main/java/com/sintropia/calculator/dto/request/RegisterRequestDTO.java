@@ -11,3 +11,4 @@ public record RegisterRequestDTO(
 		AddressDTO address,
 		@JsonProperty("digital_card_staff_count") Long digitalCardStaffCount) {
 }
+	

@@ -27,11 +27,6 @@ public class PageController{
 		return "edit";
 	}
 	
-	@GetMapping("/profile")
-	public String profile() {
-		return "profile";
-	}
-	
 	@GetMapping("/calculator")
 	public String calculator() {
 		return "calculator";

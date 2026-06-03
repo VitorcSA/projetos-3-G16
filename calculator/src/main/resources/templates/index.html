@@ -7,32 +7,69 @@
 </head>
 
 <body>
-	<h1>Bem-vindo à Sintropia</h1>
+	<header>
+	    <nav>
+	        <span>Sintropia</span>
+	        <button id="profile_button" name="profile_button">Veja Sua Conta</button>
+	    </nav>
+	</header>
+	
+	<main>
+		<h1>Bem-vindo à Sintropia</h1>
 
-	<button onclick="window.location.href = '/calculator'">Ir para Calculadora</button>
-	<a href="/profile">Veja Sua Conta</a>
+		<button onclick="window.location.href = '/calculator'">Ir para Calculadora</button>
 
-	<div id="calculation_info"></div>
+		<section id="calculation_info">
 
-	<script type="module">
-		fetch('/api/calculator/calculate', {
-			method: 'POST',
-			credentials: 'include'
-		}).then(async response => {
-			if (!response.ok) return;
+		    <div id="saved_box">
+		        <p>Economia de emissões</p>
+		        <h2 id="saved_value">...</h2>
+		        <p>CO₂ evitado por ano</p>
+		    </div>
 
-			const data = await response.json();
-			const div = document.getElementById('calculation_info');
+		    <div id="physical_box">
+		        <p>Emissão Anual</p>
+		        <h2 id="physical_value">...</h2>
+		        <p id="physical_cards">...</p>
+		    </div>
 
-			div.innerHTML = `
-				<h2>Resultado do Cálculo</h2>
-				<p>Emissão Cartão Físico: ${data.physical_card_emission.toFixed(2)} kg CO₂</p>
-				<p>Emissão Cartão Digital: ${data.digital_card_emission.toFixed(2)} kg CO₂</p>
-				<p>Diferença: ${data.difference.toFixed(2)} kg CO₂</p>
-				<p>Redução: ${data.reduction_percentage.toFixed(2)}%</p>
-			`;
-		});
-	</script>
+		    <div id="digital_box">
+		        <p>Cartão Digital</p>
+		        <h2 id="digital_per_card_value">...</h2>
+		        <p>Emitidos por cartão digital</p>
+		    </div>
+
+		    <div id="trees_box">
+		        <p>Árvores preservadas</p>
+		        <h2 id="trees_value">...</h2>
+		        <p>Árvores preservadas em 1 ano</p>
+		    </div>
+
+		</section>
+	</main>
+		
+	<dialog name="profile_dialog" id="profile_dialog">
+		<button onclick="this.closest('dialog').close()">Fechar</button>
+		<form id="profile_form">
+				<input type="text" name="name" placeholder="Seu nome">
+				<input type="email" name="email" placeholder="Seu E-mail">
+				<input type="password" name="password" placeholder="****">
+				<input type="number" name="staff_count" placeholder="Numero de funcionarios">
+				<input type="number" name="digital_staff_count" placeholder="Numero de funcionarios com cartão digital">
+
+				<select name="state" id="state" onchange="loadCities(this,this.form.querySelector('#city'))">
+				    <option value="">Selecione o estado</option>
+				</select>
+
+				<select name="city" id="city" disabled>
+				    <option value="">Selecione a cidade</option>
+				</select>
+
+				<button type="submit">Enviar</button>
+			</form>
+	</dialog>
+	
+	<script type="module" src="js/index.js"></script>
 </body>
 
 </html>

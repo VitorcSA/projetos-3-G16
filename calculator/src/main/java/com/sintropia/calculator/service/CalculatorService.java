@@ -104,26 +104,40 @@ public class CalculatorService {
         return response;
     }
     
-    public CalculationResponseDTO calculate(User user) throws Exception{
+    public CalculationResponseDTO calculate(User user) throws Exception {
 
         Coordinates userCoords = addressService.getCoordinates(
             user.getAddress().getCity(),
             user.getAddress().getState()
         );
-        
+
         double distanceKm = addressService.getClosestFactoryDistance(userCoords);
 
-        double pvcEmission = (PHYSICAL_CARD_WEIGHT_GRAMS / 1000) * PVC_FACTOR * BATCH_SIZE;
-        double energyEmission = ENERGY_FACTOR * BATCH_SIZE;
-        double transportEmission = (PHYSICAL_CARD_WEIGHT_GRAMS / 1000 * BATCH_SIZE / 1000) * distanceKm * TRANSPORT_FACTOR;
+        int staffCount = user.getStaffCount();
+        double digitalPercentage = user.getDigitalPercentage() != null ? user.getDigitalPercentage() : 0.0;
+
+        int digitalCards = (int) (staffCount * (digitalPercentage / 100));
+        int physicalCards = staffCount - digitalCards;
+
+        double pvcEmission = (PHYSICAL_CARD_WEIGHT_GRAMS / 1000) * PVC_FACTOR * physicalCards;
+        double energyEmission = ENERGY_FACTOR * physicalCards;
+        double transportEmission = (PHYSICAL_CARD_WEIGHT_GRAMS / 1000 * physicalCards / 1000) * distanceKm * TRANSPORT_FACTOR;
         double totalPhysicalEmission = pvcEmission + energyEmission + transportEmission;
 
-        double totalDigitalEmission = DIGITAL_CARD_EMISSION_KG * BATCH_SIZE;
+        double digitalCardEmissionPerCard = DIGITAL_CARD_EMISSION_KG;
+        double totalDigitalEmission = digitalCardEmissionPerCard * digitalCards;
 
         double difference = totalPhysicalEmission - totalDigitalEmission;
         double reductionPercentage = (difference / totalPhysicalEmission) * 100;
 
-        return new CalculationResponseDTO(totalPhysicalEmission, totalDigitalEmission, difference, reductionPercentage);
+        return new CalculationResponseDTO(
+            totalPhysicalEmission,
+            totalDigitalEmission,
+            digitalCardEmissionPerCard,
+            difference,
+            reductionPercentage,
+            physicalCards
+        );
     }
     
 }
