@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.sintropia.calculator.repository.UserRepository;
 import com.sintropia.calculator.service.JwtService;
 
 import jakarta.servlet.FilterChain;
@@ -23,9 +24,11 @@ import jakarta.servlet.http.HttpServletResponse;
 public class JwtFilter extends OncePerRequestFilter {
 
 	private final JwtService jwtService;
+	private final UserRepository userRepository;
 
-	public JwtFilter(JwtService jwtService){
+	public JwtFilter(JwtService jwtService, UserRepository userRepository){
 		this.jwtService = jwtService;
+		this.userRepository = userRepository;
 	}
 
 	@Override
@@ -56,7 +59,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
 		String email = jwtService.extractEmail(token);
 		
-		if(email != null && SecurityContextHolder.getContext().getAuthentication() == null){
+		if(email != null && userRepository.existsByEmail(email)){
 			UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(email, null, List.of(new SimpleGrantedAuthority("ROLE_USER")));
 			SecurityContextHolder.getContext().setAuthentication(auth);
 		}

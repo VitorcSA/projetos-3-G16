@@ -1,5 +1,8 @@
 package com.sintropia.calculator.dto;
 
-public record AddressDTO(String street,String number,String city,String state,String zipCode) {
+import jakarta.validation.constraints.NotBlank;
 
-}
+public record AddressDTO(
+		@NotBlank(message = "Cidade é obrigatorio") String city,
+		@NotBlank(message = "Estado é obrigatorio") String state
+) {}

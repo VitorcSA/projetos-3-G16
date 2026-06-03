@@ -37,22 +37,6 @@ public class UserService{
 		return repository.save(user);
 	}
 	
-    public User updateDigitalCardPercentage(Long userId, Double percentage) {
-        User user = repository.findById(userId)
-            .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
-        
-        user.setDigitalPercentage(percentage);
-        return repository.save(user);
-    }
-
-	public User findByEmail(String email){
-		return repository.findByEmail(email).orElse(null);
-	}
-
-	public User findByName(String name) {
-		return repository.findByName(name).orElse(null);
-	}
-	
 	public User updateProfile(String currentEmail, RegisterRequestDTO data) {
 		User user = repository.findByEmail(currentEmail).orElseThrow(() -> new RuntimeException("Usuario não encontrado"));
 		
@@ -76,11 +60,8 @@ public class UserService{
 			
 			Address address = user.getAddress();
 			
-			updateIfValid(data.address().street(), address::setStreet);
-			updateIfValid(data.address().number(), address::setNumber);
 			updateIfValid(data.address().city(), address::setCity);
 			updateIfValid(data.address().state(), address::setState);
-			updateIfValid(data.address().zipCode(), address::setZipCode);
 		}
 		
 		return repository.save(user);
@@ -90,6 +71,14 @@ public class UserService{
 		if(StringUtils.hasText(value)) {
 			setter.accept(value);
 		}
+	}
+
+	public User findByEmail(String email){
+		return repository.findByEmail(email).orElse(null);
+	}
+
+	public User findByName(String name) {
+		return repository.findByName(name).orElse(null);
 	}
 	
 }

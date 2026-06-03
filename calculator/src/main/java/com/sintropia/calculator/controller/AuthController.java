@@ -65,11 +65,8 @@ public class AuthController{
 			}
 
 			Address address = new Address(
-				request.address().street(),
-				request.address().number(),
 				request.address().city(),
-				request.address().state(),
-				request.address().zipCode()
+				request.address().state()
 			);
 
 			User user = new User(request.name(), request.email(), request.password(), request.staffCount(), address);
@@ -99,7 +96,7 @@ public class AuthController{
 		
 		try{
 			String email = jwtService.extractEmail(token);
-			if(email == null){
+			if(email == null || userService.findByEmail(email) == null){
 				return ResponseEntity.status(401).body("Token Invalido");
 			}
 			return ResponseEntity.ok("Token valido");

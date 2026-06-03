@@ -2,20 +2,37 @@
 <html>
 
 <head>
-	<script src="js/validate.js"></script>
-	
 	<meta charset="UTF-8">
 	<title>Home - Sintropia</title>
 </head>
 
 <body>
-
-	<h1>Bem-vindo à Sintropia </h1>
+	<h1>Bem-vindo à Sintropia</h1>
 
 	<button onclick="window.location.href = '/calculator'">Ir para Calculadora</button>
-
 	<a href="/profile">Veja Sua Conta</a>
-	
+
+	<div id="calculation_info"></div>
+
+	<script type="module">
+		fetch('/api/calculator/calculate', {
+			method: 'POST',
+			credentials: 'include'
+		}).then(async response => {
+			if (!response.ok) return;
+
+			const data = await response.json();
+			const div = document.getElementById('calculation_info');
+
+			div.innerHTML = `
+				<h2>Resultado do Cálculo</h2>
+				<p>Emissão Cartão Físico: ${data.physical_card_emission.toFixed(2)} kg CO₂</p>
+				<p>Emissão Cartão Digital: ${data.digital_card_emission.toFixed(2)} kg CO₂</p>
+				<p>Diferença: ${data.difference.toFixed(2)} kg CO₂</p>
+				<p>Redução: ${data.reduction_percentage.toFixed(2)}%</p>
+			`;
+		});
+	</script>
 </body>
 
 </html>

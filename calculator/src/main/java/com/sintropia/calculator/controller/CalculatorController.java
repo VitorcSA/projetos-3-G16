@@ -1,38 +1,51 @@
 package com.sintropia.calculator.controller;
 
-import com.sintropia.calculator.dto.request.CalculoRequestDTO;
-import com.sintropia.calculator.dto.response.CalculoResponseDTO;
-import com.sintropia.calculator.service.CalculadoraService;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintWriter;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintWriter;
-
-import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Paragraph;
+import com.sintropia.calculator.dto.request.CalculoRequestDTO;
+import com.sintropia.calculator.dto.response.CalculoResponseDTO;
+import com.sintropia.calculator.model.User;
+import com.sintropia.calculator.service.CalculatorService;
+import com.sintropia.calculator.service.UserService;
 
 @RestController
 @RequestMapping("/api/calculator")
 @CrossOrigin(origins = "*")
 public class CalculatorController {
 
-    private final CalculadoraService service;
-
-    public CalculatorController(CalculadoraService service) {
-        this.service = service;
+    private final CalculatorService calculatorService;
+    private final UserService userService;
+    
+    public CalculatorController(CalculatorService calculatorService,UserService userService) {
+        this.calculatorService = calculatorService;
+        this.userService = userService;
     }
 
+    @PostMapping("/calculate")
+    public ResponseEntity<?> calculate(@AuthenticationPrincipal String email) throws Exception{
+    	User user = userService.findByEmail(email);
+    	return ResponseEntity.ok(calculatorService.calculate(user));
+    }
+    
     @PostMapping("/calcular")
-    public ResponseEntity<CalculoResponseDTO> calcular(
-            @RequestBody CalculoRequestDTO request) {
+    public ResponseEntity<CalculoResponseDTO> calcular(@RequestBody CalculoRequestDTO request) {
 
-        CalculoResponseDTO response = service.calcular(request);
+        CalculoResponseDTO response = calculatorService.calcular(request);
         return ResponseEntity.ok(response);
     }
 
@@ -40,7 +53,7 @@ public class CalculatorController {
     public ResponseEntity<byte[]> exportCsv(
             @RequestBody CalculoRequestDTO request) {
 
-        CalculoResponseDTO result = service.calcular(request);
+        CalculoResponseDTO result = calculatorService.calcular(request);
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         PrintWriter writer = new PrintWriter(out);
@@ -64,7 +77,7 @@ public class CalculatorController {
     public ResponseEntity<byte[]> exportPdf(
             @RequestBody CalculoRequestDTO request) throws Exception {
 
-        CalculoResponseDTO result = service.calcular(request);
+        CalculoResponseDTO result = calculatorService.calcular(request);
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         PdfWriter writer = new PdfWriter(out);

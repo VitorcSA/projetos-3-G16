@@ -15,11 +15,13 @@
 		<input type="number" name="staff_count" placeholder="Numero de funcionarios" required>
 		<input type="number" name="digital_staff_count" placeholder="Numero de funcionarios com cartão digital">
 
-		<input type="text" name="street" placeholder="Rua" required>
-		<input type="text" name="number" placeholder="Numero" required>
-		<input type="text" name="city" placeholder="Cidade" required>
-		<input type="text" name="state" placeholder="Estado" required>
-		<input type="text" name="zip_code" placeholder="Cep" onblur="searchByCep(this)" required>
+		<select name="state" id="state" required>
+		    <option value="">Selecione o estado</option>
+		</select>
+		
+		<select name="city" id="city" disabled required>
+		    <option value="">Selecione a cidade</option>
+		</select>
 
 		<button type="submit">Enviar</button>
 	</form>
@@ -28,59 +30,7 @@
 
 	<a href="/login">Já tem uma conta?</a>
 	
-	<script>
-		document.getElementById("register_form").addEventListener('submit', function (data) {
-			data.preventDefault();
-
-			const formData = new FormData(this);
-			const payload = {
-				name: formData.get('name'),
-				email: formData.get('email'),
-				password: formData.get('password'),
-				staffCount: formData.get('staff_count'),
-				address: {
-					street: formData.get('street'),
-					number: formData.get('number'),
-					city: formData.get('city'),
-					state: formData.get('state'),
-					zipCode: formData.get('zip_code')
-				},
-				digitalCardStaffCount: formData.get('digital_staff_count') ? parseInt(formData.get('digital_staff_count')) : null
-			};
-
-			fetch('/api/auth/register', {
-				method: 'POST',
-				headers: {'Content-Type': 'application/json'},
-				body: JSON.stringify(payload)
-			}).then(async res => {
-				const text = await res.text();
-
-				if (res.ok) {
-					alert(text);
-					window.location.href = '/';
-				} else {
-					document.getElementById("error").innerText = text;
-				}
-
-			});
-		});
-
-		async function searchByCep(input) {
-			const form = input.form;
-			const cep = input.value.replace('-', '');
-
-			if (cep.length !== 8) return;
-
-			const res = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-			const data = await res.json();
-
-			if (data.erro) return;
-
-			form.querySelector('[name="street"]').value = data.logradouro;
-			form.querySelector('[name="city"]').value = data.localidade;
-			form.querySelector('[name="state"]').value = data.uf;
-		}
-	</script>
+	<script type="module" src="js/register.js"></script>
 </body>
 
 </html>

@@ -35,11 +35,8 @@ public class UserController{
 		AddressDTO addressDTO = null;
 		if(user.getAddress() != null) {
 			addressDTO = new AddressDTO(
-					user.getAddress().getStreet(),
-					user.getAddress().getNumber(),
 					user.getAddress().getCity(),
-					user.getAddress().getState(),
-					user.getAddress().getZipCode()
+					user.getAddress().getState()
 			);
 		}
 		
@@ -57,7 +54,7 @@ public class UserController{
 	}
 	
 	@PutMapping("/profile")
-	public ResponseEntity<String> updateUserProfile(@AuthenticationPrincipal String email, @RequestBody RegisterRequestDTO updatedProfile) {
+	public ResponseEntity<String> updateUserProfile(@AuthenticationPrincipal String email, @RequestBody RegisterRequestDTO updatedProfile){
 		try {
 			service.updateProfile(email, updatedProfile);
 			return ResponseEntity.ok("Perfil atualizado com sucesso!");
