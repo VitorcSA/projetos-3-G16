@@ -1,0 +1,13 @@
+:root {
+    --cor-fundo: #f3f4f6;
+    --cor-primaria: #3b82f6;
+    --cor-texto: #1f2937;
+    --borda-padrao: 6px;
+}
+
+*{
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: Inter,'Segou UI', Tahoma, Geneva, Verdana, sans-serif;	
+}
