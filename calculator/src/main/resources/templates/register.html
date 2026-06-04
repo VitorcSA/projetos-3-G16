@@ -4,33 +4,87 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Cadastro - Sintropia</title>
+	<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+	<link rel="stylesheet" href="/css/global.css">
+	<link rel="stylesheet" href="/css/auth.css">
+	<link rel="stylesheet" href="/css/register.css">
 </head>
 
 <body>
-	<h1>Crie Sua Conta</h1>
-	<form id="register_form">
-		<input type="text" name="name" placeholder="Seu nome" required>
-		<input type="email" name="email" placeholder="Seu E-mail" required>
-		<input type="password" name="password" placeholder="****" required>
-		<input type="number" name="staff_count" placeholder="Numero de funcionarios" required>
-		<input type="number" name="digital_staff_count" placeholder="Numero de funcionarios com cartão digital">
-
-		<select name="state" id="state" required>
-		    <option value="">Selecione o estado</option>
-		</select>
+	<main>
+		<div class="background-image"></div>
 		
-		<select name="city" id="city" disabled required>
-		    <option value="">Selecione a cidade</option>
-		</select>
+		<div id="register_container" class="auth-container">
 
-		<button type="submit">Enviar</button>
-	</form>
+			<img src="/images/logo.svg" alt="Logo" class="logo">
 
-	<h2 id="error"></h2>
+			<h1 id="register_title" class="auth-title">Crie sua conta</h1>
+			
+			<form name="form" id="register_form" class="auth-form">
+				
+				<div id="step1" class="step1">
+					<div class="input-group">
+						<label for="email">Email corporativo</label>
+						<input type="email" id="email" name="email" placeholder="Adicionar email corporativo" required>
+					</div>
+					
+					<div class="input-group">
+						<label for="password">Senha</label>
+						<input type="password" id="password" name="password" placeholder="Crie uma senha" required>
+					</div>
+					
+					<button type="button" id="next_step_button" class="btn-primary">Cadastrar informações</button>
+				</div>
+				
+				<div id="step2" class="step2" style="display: none;">
+					<div class="input-group">
+						<label for="name">Nome da sua empresa</label>
+						<input type="text" id="name" name="name" placeholder="ex: " required>
+					</div>
+					
+					<div class="input-group">
+					    <label for="state">Estado</label>
+					    <select name="state" id="state" required>
+					        <option value="">Selecione o estado</option>
+					    </select>
+					</div>
 
-	<a href="/login">Já tem uma conta?</a>
+					<div class="input-group">
+					    <label for="city">Cidade</label>
+					    <select name="city" id="city" disabled required>
+					        <option value="">Selecione a cidade</option>
+					    </select>
+					</div>
+					
+					<div class="input-group">
+						<label for="staff_count">Numero de Funcionarios</label>
+						<input type="number" id="staff_count" name="staff_count" placeholder="ex: " required>
+					</div>
+					
+					<div class="input-group">
+						<label for="digital_staff_count">Numero de Funcionários que so usam cartão digital
+							<span class="optional-tag">*(opcional)</span>
+						</label>
+						<input type="number" id="digital_staff_count" name="digital_staff_count" placeholder="Numero de funcionarios com cartão digital">
+					</div>
+					
+					<button type="submit" class="btn-primary">Calcular Emissão de Carbono</button>
+				</div>
+
+			</form>
+			
+			<p id="login_text" class="redirection-text">
+				Já tem uma conta? <a href="/login" class="redirection-link">Entrar</a>
+			</p>
+		
+			<h2 id="error"></h2>
+		
+		</div>
+	
+	</main>
 	
 	<script type="module" src="js/register.js"></script>
+	
 </body>
 
 </html>

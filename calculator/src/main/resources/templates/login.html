@@ -4,7 +4,9 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Login - Sintropia</title>
+	<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 	<link rel="stylesheet" href="/css/global.css">
+	<link rel="stylesheet" href="/css/auth.css">
 	<link rel="stylesheet" href="/css/login.css">
 </head>
 
@@ -13,13 +15,13 @@
 	<main>
 		<div class="background-image"></div>
 		
-		<div class="login-container">
+		<div class="auth-container">
 						
 			<img src="/images/logo.svg" alt="Logo edenred" class="logo">
 		        
-		    <h1 class="login-title">Entrar na conta</h1>
+		    <h1 class="auth-title">Entrar na conta</h1>
 		        
-		    <form id="login_form" class="login-form">
+		    <form id="login_form" class="auth-form">
 		    	<div class="input-group">
 		        	<label for="email">Email corporativo</label>
 		            <input type="email" id="email" name="email" placeholder="Adicionar email corporativo" required>
@@ -33,8 +35,8 @@
 		        <button type="submit" class="btn-primary">Entrar na calculadora</button>
 		    </form>
 
-			<p class="register-text">
-				Não tem uma conta? <a href="/register" class="register-link">Registrar-se</a>
+			<p class="redirection-text">
+				Não tem uma conta? <a href="/register" class="redirection-link">Registrar-se</a>
 			</p>
 				
 			<p id="error" class="error-message"></p>
