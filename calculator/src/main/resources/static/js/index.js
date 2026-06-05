@@ -17,11 +17,10 @@ fetch('/api/calculator/calculate', {
 });
 
 function showCalculation(data) {
-    const trees = Math.floor(data.difference / 22);
-
-    document.getElementById('saved_value').innerText = `${data.difference.toFixed(3)} kg`;
-    document.getElementById('physical_value').innerText = `${data.physical_card_emission.toFixed(3)} Kg ↑ ${data.reduction_percentage.toFixed(0)}%`;
-    document.getElementById('physical_cards').innerText = `Equivalente a ${data.staff_count} cartões`;
-    document.getElementById('digital_per_card_value').innerText = `${data.digital_card_emission_per_card.toFixed(3)} Kg ↑ ${data.reduction_percentage.toFixed(0)}%`;
-    document.getElementById('trees_value').innerText = trees;
+    const difference = data.annual_physical_emission - data.annual_digital_emission;
+ 
+    document.getElementById('physical_value').innerText = `${data.annual_physical_emission.toFixed(3)} kg`;
+    document.getElementById('digital_value').innerText = `${data.annual_digital_emission.toFixed(3)} kg`;
+    document.getElementById('saved_value').innerText = `${difference.toFixed(3)} kg`;
+    document.getElementById('money_value').innerText = `$${data.money_wasted.toFixed(2)}`;
 }
