@@ -7,6 +7,7 @@
 	--link-color: #277D5F;
 	--link-color-dark:#1f6b50;
     --text-color: #1f2937;
+	--border-color: #9FA9A3;
 }
 
 *{
@@ -93,9 +94,23 @@ body {
     white-space: nowrap;
 }
 
-.btn-icon{
-	width: 44px;
-	height: 44px;
-	border-radius: 999px;
+.btn-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    background: none; 
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    border: 2px solid rgba(0, 0, 0, 0.5); 
+    
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.btn-icon:hover {
+    border-color: rgba(0, 0, 0, 0.25);
+    background-color: rgba(0, 0, 0, 0.03);
 }
 

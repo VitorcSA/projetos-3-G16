@@ -1,0 +1,121 @@
+.main-content{
+	display: flex;
+	flex-direction: column;
+	
+	padding: 23px 43px;
+	gap: 25px;
+}
+
+
+.welcome-title {
+    font-size: 24px;
+    color: var(--text-color);
+    font-size: 32px;
+}
+
+.welcome-subtitle {
+    color: var(--primary-color);
+}
+
+.cards-section {
+    display: flex;          
+	justify-content: space-between;
+    gap: 19px;
+    width: 100%;
+    
+    flex-wrap: wrap;
+}
+
+.info-card {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+    width: 321px;
+    height: 200px;
+    border-radius: 16px;
+	padding: 20px;
+	
+	background: #FFFFFF;
+    
+    border: 1px solid var(--border-color);
+    
+    box-sizing: border-box; 
+}
+
+.icon-wrapper {
+    width: 40px;
+    height: 40px;
+    background-color: #E4FDF5;
+    border-radius: 50%;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-icon {
+    width: 24px;
+	height: 24px; 
+    
+    object-fit: contain; 
+}
+
+#physical_box .icon-wrapper {
+
+    background-color: #FFF3F1; 
+}
+
+.card-label {
+	font-size: 20px;
+}
+
+.card-value {
+	font-size: 32px;
+}
+
+.card-description {
+	font-size: 16px;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr; 
+    gap: 24px; 
+    width: 100%;
+}
+
+.side-column {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.chart-card {
+	display: flex;
+    flex-direction: column;
+	background: #FFFFFF;
+    border: 1px solid #9FA9A3; 
+    border-radius: 16px;
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+.main-chart {
+	width: 769px;
+	height: 540px;
+}
+
+.side-chart {
+	width: 548px;
+	height: 242px;
+}
+
+.equivalences-wrapper {
+	display: flex;
+}
+
+.equivalence-icon {
+	width: 131px;
+	height: 131px;
+}
+
