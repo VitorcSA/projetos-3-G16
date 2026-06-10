@@ -21,7 +21,7 @@ public class CalculatorService {
     private static final double ENERGY_FACTOR = 0.084;
 
     // Fonte: https://www.terragreetings.com/lookout/carbon-footprint-digital-vs-physical-cards
-    private static final double DIGITAL_CARD_EMISSION_KG = 0.010;
+    private static final double DIGITAL_CARD_EMISSION_KG = 0.01;
 
     // Fonte: https://www.dnb.nl/media/a3sk2oob/574-evaluating-the-environmental-impact-of-debit-card-payments.pdf
     private static final double EMISSION_PER_TRANSACTION_KG = 0.00085;
@@ -55,21 +55,14 @@ public class CalculatorService {
         double transportEmission    = calculateTransportEmission(cardCount, distanceKm);
         double transactionEmission  = calculateTransactionEmission(cardCount);
 
-        double annualPhysicEmission = productionEmission + transportEmission + transactionEmission;
+        double annualPhysicEmission = (productionEmission + transportEmission) + transactionEmission;
+        double annualDigitalEmission = (cardCount * DIGITAL_CARD_EMISSION_KG) + transactionEmission;
 
-        double productionEmissionPercentage  = (annualPhysicEmission > 0)
-            ? (productionEmission  / annualPhysicEmission) * 100.0 : 0.0;
-        double transportEmissionPercentage   = (annualPhysicEmission > 0)
-            ? (transportEmission   / annualPhysicEmission) * 100.0 : 0.0;
-        double transactionEmissionPercentage = (annualPhysicEmission > 0)
-            ? (transactionEmission / annualPhysicEmission) * 100.0 : 0.0;
+        double productionEmissionPercentage  = (annualPhysicEmission > 0) ? (productionEmission  / annualPhysicEmission) * 100.0 : 0.0;
+        double transportEmissionPercentage   = (annualPhysicEmission > 0) ? (transportEmission   / annualPhysicEmission) * 100.0 : 0.0;
+        double transactionEmissionPercentage = (annualPhysicEmission > 0) ? (transactionEmission / annualPhysicEmission) * 100.0 : 0.0;
 
-        double annualDigitalEmission = cardCount
-            * (DIGITAL_CARD_EMISSION_KG
-                + (EMISSION_PER_TRANSACTION_KG * DEFAULT_ANNUAL_TRANSACTIONS_PER_STAFF));
-
-        double money_wasted = cardCount
-            * (PHYSICAL_CARD_PRODUCTION_COST_USD + PHYSICAL_CARD_SHIPPING_COST_USD);
+        double money_wasted = cardCount * (PHYSICAL_CARD_PRODUCTION_COST_USD + PHYSICAL_CARD_SHIPPING_COST_USD);
 
         return new CalculationResponseDTO(
             annualPhysicEmission,

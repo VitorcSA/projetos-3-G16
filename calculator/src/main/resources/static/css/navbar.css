@@ -1,0 +1,43 @@
+
+.navbar{
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	
+	width: 100%;
+	height: 8%;
+	max-height: 84px;
+	
+	background-color: #FFFF;
+	padding: 0 52px;
+	position: relative;
+}
+
+.navbar-logo{
+	max-width: 132px;
+	max-height: 85px;
+}
+
+.navbar-nav {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.navbar-actions{
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.navbar-divider {
+    width: 2px;
+    height: 25px;
+    background-color: #000000;
+	border-radius: 999px;
+}
+
+.navbar-buttons{
+	display: flex;
+	gap: 10px;
+}

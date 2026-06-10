@@ -18,9 +18,14 @@ fetch('/api/calculator/calculate', {
 
 function showCalculation(data) {
     const difference = data.annual_physical_emission - data.annual_digital_emission;
- 
-    document.getElementById('physical_value').innerText = `${data.annual_physical_emission.toFixed(3)} kg`;
-    document.getElementById('digital_value').innerText = `${data.annual_digital_emission.toFixed(3)} kg`;
-    document.getElementById('saved_value').innerText = `${difference.toFixed(3)} kg`;
-    document.getElementById('money_value').innerText = `$${data.money_wasted.toFixed(2)}`;
+
+    const format = (num) => num.toLocaleString('pt-BR', { 
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 1
+    });
+
+    document.getElementById('physical_value').innerText = `${format(data.annual_physical_emission)} kg`;
+    document.getElementById('digital_value').innerText = `${format(data.annual_digital_emission)} kg`;
+    document.getElementById('saved_value').innerText = `${format(difference)} kg`;
+    document.getElementById('money_value').innerText = `$${format(data.money_wasted)}`;
 }

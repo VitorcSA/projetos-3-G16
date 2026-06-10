@@ -5,67 +5,96 @@
 	<meta charset="UTF-8">
 	<title>Home - Sintropia</title>
 	<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+	<link rel="stylesheet" href="/css/global.css">
+	<link rel="stylesheet" href="/css/navbar.css">
+	<link rel="stylesheet" href="/css/index.css">
 </head>
 
 <body>
-	<header>
-	    <nav>
-	        <span>Sintropia</span>
-	        <button id="profile_button" name="profile_button">Veja Sua Conta</button>
+	<header class="navbar">
+	     <img src="/images/logo.svg" alt="Logo" class="navbar-logo">
+
+	    <nav class="navbar-nav">
+	        <a href="/" class="nav-link active">Emissão Prevista</a>
+	        <a href="/history" class="nav-link">Histórico e Metas</a>
 	    </nav>
+
+		<div class="navbar-actions">
+		    <nav class="navbar-buttons">
+		        <button id="info_button" class="btn-icon"></button>
+		        <button id="export_button" class="btn-icon"></button>
+		        <button id="profile_button" class="btn-icon"></button>
+		    </nav>
+
+			<div class="navbar-divider"></div>
+			
+		    <div class="navbar-company">
+		        <div class="company-avatar"></div>
+		        <div class="company-info">
+		            <span id="company_name" class="company-name">Nome da Empresa</span>
+		            <span id="company_email" class="company-email">email@empresa.com</span>
+		        </div>
+		    </div>
+		</div>
+		
 	</header>
 
-	<main>
-		<h1>Bem-vindo à Sintropia</h1>
+    <main class="main-content">
+		<section class="welcome-section">
+		    <h1 class="welcome-title">Bem-vindo à Sintropia</h1>
+		    <p class="welcome-subtitle">Acompanhe o impacto ambiental dos cartões da sua empresa</p>
+		</section>
+		
+		<section id="calculation_info" class="cards-section">
 
-		<section id="calculation_info">
-
-		    <div id="saved_box">
-		        <p>Economia de emissões</p>
-		        <h2 id="saved_value">...</h2>
-		        <p>CO₂ evitado por ano</p>
+		    <div class="info-card" id="saved_box">
+		        <p class="card-label">Economia de emissões</p>
+		        <h2 class="card-value" id="saved_value">...</h2>
+		        <p class="card-description">CO₂ evitado por ano</p>
 		    </div>
 
-		    <div id="physical_box">
-		        <p>Emissão Cartão Físico</p>
-		        <h2 id="physical_value">...</h2>
-		        <p>Emitidos por ano (físico)</p>
+		    <div class="info-card" id="physical_box">
+		        <p class="card-label">Emissão Cartão Físico</p>
+		        <h2 class="card-value" id="physical_value">...</h2>
+		        <p class="card-description">Emitidos por ano</p>
 		    </div>
 
-		    <div id="digital_box">
-		        <p>Emissão Cartão Digital</p>
-		        <h2 id="digital_value">...</h2>
-		        <p>Emitidos por ano (digital)</p>
+		    <div class="info-card" id="digital_box">
+		        <p class="card-label">Emissão Cartão Digital</p>
+		        <h2 class="card-value" id="digital_value">...</h2>
+		        <p class="card-description">Emitidos por ano</p>
 		    </div>
 
-		    <div id="money_box">
-		        <p>Gasto com cartão físico</p>
-		        <h2 id="money_value">...</h2>
-		        <p>Custo anual estimado</p>
+		    <div class="info-card" id="money_box">
+		        <p class="card-label">Gasto com cartão físico</p>
+		        <h2 class="card-value" id="money_value">...</h2>
+		        <p class="card-description">Custo anual estimado</p>
 		    </div>
 
 		</section>
+		
 	</main>
 
-	<dialog name="profile_dialog" id="profile_dialog">
-		<button onclick="this.closest('dialog').close()">Fechar</button>
-		<form id="profile_form">
-				<input type="text" name="name" placeholder="Seu nome">
-				<input type="email" name="email" placeholder="Seu E-mail">
-				<input type="password" name="password" placeholder="****">
-				<input type="number" name="staff_count" placeholder="Numero de funcionarios">
-				<input type="number" name="digital_staff_count" placeholder="Numero de funcionarios com cartão digital">
+	<dialog id="profile_dialog">
+	    <button onclick="this.closest('dialog').close()">Fechar</button>
+	    <form id="profile_form">
+	        <input type="text" name="name" placeholder="Seu nome">
+	        <input type="email" name="email" placeholder="Seu E-mail">
+	        <input type="password" name="password" placeholder="****">
+	        <input type="number" name="staff_count" placeholder="Numero de funcionarios">
+	        <input type="number" name="digital_staff_count" placeholder="Numero de funcionarios com cartão digital">
 
-				<select name="state" id="state" onchange="loadCities(this,this.form.querySelector('#city'))">
-				    <option value="">Selecione o estado</option>
-				</select>
+	        <select name="state" id="state">
+	            <option value="">Selecione o estado</option>
+	        </select>
 
-				<select name="city" id="city" disabled>
-				    <option value="">Selecione a cidade</option>
-				</select>
+	        <select name="city" id="city" disabled>
+	            <option value="">Selecione a cidade</option>
+	        </select>
 
-				<button type="submit">Enviar</button>
-			</form>
+	        <button type="submit">Enviar</button>
+	    </form>
+		<p id="error" class="error-message"></p>
 	</dialog>
 
 	<script type="module" src="js/index.js"></script>

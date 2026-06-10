@@ -4,7 +4,7 @@ import {openDialog} from './dialogs.js'
 export async function openProfileDialog(dialog){
 	openDialog(dialog);
 	
-	fetch('api/user/profile').then(async response => {
+	fetch('/api/user/profile').then(async response => {
 		if(!response.ok){
 			window.location.replace('/login');
 			return null;
@@ -63,7 +63,7 @@ export async function openProfileDialog(dialog){
 				if (response.ok) {
 					alert(text);
 				} else {
-					document.getElementById("error").innerText = text;
+					dialog.querySelector("#error").innerText = text;
 				}
 
 			}).catch(error => {

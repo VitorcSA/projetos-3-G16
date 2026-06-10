@@ -16,10 +16,14 @@
 	font-family: Inter, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+body {
+    background-color: var(--background-color);
+}
+
 .logo {
 	margin: 0 auto;
-    width: 132px;
-	height: 85px;
+    max-width: 132px;
+	max-height: 85px;
 	margin-bottom: 32px;
 }
 
@@ -38,7 +42,7 @@
 	font-size: 16px;
 	
 	border-radius: 16px;
-	color: var(--cor-texto);
+	color: var(--text-color);
     
 	transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
@@ -47,7 +51,7 @@
 .input-group select:focus {
     outline: none;
     
-	border-color: var(--cor-primaria); 
+	border-color: var(--primary-color); 
     
     box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15); 
 }
@@ -88,3 +92,10 @@
     margin-left: 4px;
     white-space: nowrap;
 }
+
+.btn-icon{
+	width: 44px;
+	height: 44px;
+	border-radius: 999px;
+}
+
