@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+	<th:block th:fragment="navbar">
+		<header id="navigation_bar" class="navbar">
+			<img src="/images/logo.svg" alt="Logo" class="navbar-logo">
+
+			<nav id="navbar-link" class="navbar-nav">
+				<a href="/" class="nav-link" data-path="/">Emissão Prevista</a>
+				<a href="/history" class="nav-link" data-path="/history">Histórico e Metas</a>
+			</nav>
+
+			<div id="navigation_bar_actions" class="navbar-actions">
+				<nav class="navbar-buttons">
+
+					<button id="info_button" class="btn-icon" data-modal="info-modal">
+						<img src="/images/ver_informacoes.svg">
+					</button>
+					<button id="export_button" class="btn-icon" data-modal="export-modal">
+						<img src="/images/exportar_dados.svg">
+					</button>
+					<button id="profile_button" class="btn-icon" data-modal="profile-modal">
+						<img src="/images/editar_perfil.svg">
+					</button>
+				</nav>
+
+				<div class="navbar-divider"></div>
+
+				<div id="navigation_bar_info" class="navbar-company">
+					<div class="company-avatar"></div>
+
+					<div id="company_info" class="company-info">
+						<span id="company_name" class="company-name"
+							th:text="${user.name}">NomedaEmpresa</span>
+						<span id="company_email" class="company-email"
+							th:text="${user.email}">email@empresa.com</span>
+					</div>
+				</div>
+			</div>
+		</header>
+
+		<dialog id="profile-modal" class="modal">
+			<button onclick="this.closest('dialog').close()" class="modal__close-btn"
+				aria-label="Fechar"></button>
+
+			<form id="profile-form" class="modal__form">
+				<input type="text" name="name" class="form__input" placeholder="Seu nome"
+					th:value="${user.name}">
+				<input type="email" name="email" class="form__input" placeholder="Seu E-mail"
+					th:value="${user.email}">
+				<input type="password" name="password" class="form__input" placeholder="****">
+				<input type="number" name="staff_count" class="form__input"
+					placeholder="Número de funcionários" th:value="${user.staffCount}">
+				<input type="number" name="digital_staff_count" class="form__input"
+					placeholder="Número de funcionários com cartão digital"
+					th:value="${user.digitalPercentage}">
+				<select name="state" id="profile-state" class="form__select">
+					<option value="">Selecione o estado</option>
+				</select>
+				<select name="city" id="profile-city" class="form__select" disabled>
+					<option value="">Selecione a cidade</option>
+				</select>
+				<button type="submit" class="button button--primary">Enviar</button>
+			</form>
+
+			<p id="profile-error" class="error-message"></p>
+		</dialog>
+
+		<dialog id="export-modal" class="modal">
+			<button onclick="this.closest('dialog').close()" class="modal__close-btn"
+				aria-label="Fechar"></button>
+
+			<div class="modal__content">
+				<label for="dashboard-selection" class="modal__title">Exportar Dashboard</label>
+				<select id="dashboard-selection" class="modal__select">
+					<option value="">Selecionar Dashboard</option>
+				</select>
+
+				<div class="modal__actions">
+					<button id="btn-export-excel" class="button">Exportar como tabela</button>
+					<button id="btn-export-image" class="buttons">Exportar como imagem</button>
+				</div>
+			</div>
+
+			<p id="export-error" class="error-message"></p>
+		</dialog>
+
+		<dialog id="info-modal" class="modal">
+			<button onclick="this.closest('dialog').close()" class="modal__close-btn"
+				aria-label="Fechar"></button>
+		</dialog>
+
+	</th:block>
+</body>
+
+</html>

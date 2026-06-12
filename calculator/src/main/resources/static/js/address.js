@@ -1,32 +1,32 @@
 export async function loadStates(select) {
-    const response = await fetch("https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome");
-    const states = await response.json();
-	
-    states.forEach(state => {
-        const option = document.createElement("option");
-        option.value = state.nome;
-        option.textContent = state.sigla;
-        select.appendChild(option);
-    });
-}	
+	const response = await fetch("https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome");
+	const states = await response.json();
 
-export async function loadCities(state, select){
-    select.innerHTML = '<option value="">Selecione a cidade</option>';
-    select.disabled = true;
+	states.forEach(state => {
+		const option = document.createElement("option");
+		option.value = state.nome;
+		option.textContent = state.sigla;
+		select.appendChild(option);
+	});
+}
 
-    if (!state.value) return;
+export async function loadCities(state, select) {
+	select.innerHTML = '<option value="">Selecione a cidade</option>';
+	select.disabled = true;
 
-    const sigla = state.selectedOptions[0].textContent;
+	if (!state.value) return;
 
-    const response = await fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${sigla}/municipios`);
-    const cities = await response.json();
+	const sigla = state.selectedOptions[0].textContent;
 
-    cities.forEach(city => {
-        const option = document.createElement("option");
-        option.value = city.nome;
-        option.textContent = city.nome;
-        select.appendChild(option);
-    });
+	const response = await fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${sigla}/municipios`);
+	const cities = await response.json();
 
-    select.disabled = false;
+	cities.forEach(city => {
+		const option = document.createElement("option");
+		option.value = city.nome;
+		option.textContent = city.nome;
+		select.appendChild(option);
+	});
+
+	select.disabled = false;
 }

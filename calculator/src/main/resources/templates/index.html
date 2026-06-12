@@ -8,105 +8,87 @@
 	<link rel="stylesheet" href="/css/global.css">
 	<link rel="stylesheet" href="/css/navbar.css">
 	<link rel="stylesheet" href="/css/index.css">
+	<script src="/js/navbar.js" type="module"></script>
 </head>
 
 <body>
-	<header class="navbar">
-	     <img src="/images/logo.svg" alt="Logo" class="navbar-logo">
+	<header th:replace="~{fragments :: navbar}"></header>
 
-	    <nav class="navbar-nav">
-	        <a href="/" class="nav-link active">Emissão Prevista</a>
-	        <a href="/history" class="nav-link">Histórico e Metas</a>
-	    </nav>
-
-		<div class="navbar-actions">
-		    <nav class="navbar-buttons">
-		        <button id="info_button" class="btn-icon"><img src="/images/ver_informacoes.svg"></button>
-		        <button id="export_button" class="btn-icon"><img src="/images/exportar_dados.svg"></button>
-		        <button id="profile_button" class="btn-icon"><img src="/images/editar_perfil.svg"></button>
-		    </nav>
-
-			<div class="navbar-divider"></div>
-			
-		    <div class="navbar-company">
-		        <div class="company-avatar"></div>
-		        <div class="company-info">
-		            <span id="company_name" class="company-name">Nome da Empresa</span>
-		            <span id="company_email" class="company-email">email@empresa.com</span>
-		        </div>
-		    </div>
-		</div>
-		
-	</header>
-
-    <main class="main-content">
+	<main class="main-content">
 		<section class="welcome-section">
-		    <h1 class="welcome-title">
-		        Dashboard / <span class="welcome-subtitle">Emissão Prevista</span>
-		    </h1>
+			<h1 class="welcome-title">
+				Dashboard / <span class="welcome-subtitle">Emissão Prevista</span>
+			</h1>
 		</section>
-		
-		<section id="calculation_info" class="cards-section">
 
+		<section id="calculation_info" class="cards-section">
 			<div class="info-card" id="physical_box">
 				<div class="icon-wrapper">
-						<img src="/images/cartao.svg" alt="" class="card-icon">
-				 </div>
-			    <p class="card-label">Cartão Físico</p>
-			    <h2 class="card-value" id="physical_value">...</h2>
-			    <p class="card-description" id="description"></p>
+					<img src="/images/cartao.svg" alt="" class="card-icon">
+				</div>
+				<p class="card-label">Cartão Físico</p>
+				<h2 class="card-value"
+					th:text="${#numbers.formatDecimal(dados.annualPhysicEmission, 1, 'POINT', 2, 'COMMA')} + ' kg'">
+					...</h2>
+				<p class="card-description"
+					th:text="'Equivalente a ' + ${dados.cardCount} + ' cartões'"></p>
 			</div>
-			
+
 			<div class="info-card" id="digital_box">
 				<div class="icon-wrapper">
 					<img src="/images/digital.svg" alt="" class="card-icon">
-				 </div>
-			    <p class="card-label">Cartão Digital </p>
-			    <h2 class="card-value" id="digital_value">...</h2>
-			    <p class="card-description" >Emitidos por cartão Digital</p>
+				</div>
+				<p class="card-label">Cartão Digital</p>
+				<h2 class="card-value"
+					th:text="${#numbers.formatDecimal(dados.annualDigitalEmission, 1, 'POINT', 2, 'COMMA')} + ' kg'">
+					...</h2>
+				<p class="card-description">Emitidos por cartão Digital</p>
 			</div>
-			
-		    <div class="info-card" id="saved_box">
+
+			<div class="info-card" id="saved_box">
 				<div class="icon-wrapper">
 					<img src="/images/cloud.svg" alt="" class="card-icon">
-				 </div>
-		        <p class="card-label">Economia de emissões</p>
-		        <h2 class="card-value" id="saved_value">...</h2>
-		        <p class="card-description">CO₂ evitado por ano</p>
-		    </div>
+				</div>
+				<p class="card-label">Economia de emissões</p>
+				<h2 class="card-value"
+					th:text="${#numbers.formatDecimal(dados.annualPhysicEmission - dados.annualDigitalEmission, 1, 'POINT', 2, 'COMMA')} + ' kg'">
+					...</h2>
+				<p class="card-description">CO₂ evitado por ano</p>
+			</div>
 
-		    <div class="info-card" id="money_box">
+			<div class="info-card" id="money_box">
 				<div class="icon-wrapper">
 					<img src="/images/cifrao.svg" alt="" class="card-icon">
-				 </div>
-		        <p class="card-label">Dinheiro gasto</p>
-		        <h2 class="card-value" id="money_value">...</h2>
-		        <p class="card-description">reais em produção de cartão</p>
-		    </div>
-			
+				</div>
+				<p class="card-label">Dinheiro gasto</p>
+				<h2 class="card-value"
+					th:text="'R$ ' + ${#numbers.formatDecimal(dados.moneyWasted, 1, 'POINT', 2, 'COMMA')}">
+					...</h2>
+				<p class="card-description">reais em produção de cartão</p>
+			</div>
 		</section>
-	
+
 		<div id="dashboard_grid" class="dashboard-grid">
 
-		    <div class="chart-card main-chart">
-		        <h3>Economia de emissões</h3>
-		        <p class="subtitle">CO₂ evitado por ano</p>
-		        <canvas id="mainChart"></canvas> 
-		    </div>
+			<div class="chart-card main-chart">
+				<h3>Economia de emissões</h3>
+				<p class="subtitle">CO₂ evitado por ano</p>
+				<canvas id="mainChart"></canvas>
+			</div>
 
-		    <div class="side-column">
-		        
-		        <div class="chart-card side-chart">
-		            <h3>Origem das emissões</h3>
-		            <canvas id="donutChart"></canvas>
-		        </div>
+			<div class="side-column">
 
-		        <div class="chart-card side-chart">
-		            <h3>Equivalências</h3>
-		            <p class="subtitle">CO₂ evitado por ano</p>
-					
+				<div class="chart-card side-chart">
+					<h3>Origem das emissões</h3>
+					<canvas id="donutChart"></canvas>
+				</div>
+
+				<div class="chart-card side-chart">
+					<h3>Equivalências</h3>
+					<p class="subtitle">CO₂ evitado por ano</p>
+
 					<div class="equivalences-wrapper">
-		            	<div class="equivalences-container" id="water_equivalence">
+						<div class="equivalences-container" id="water_equivalence">
 							<img src="/images/gota.svg" alt="" class="equivalence-icon">
 						</div>
 						<div class="equivalences-container" id="tree_equivalence">
@@ -118,38 +100,15 @@
 						<div class="equivalences-container" id="bottles_equivalence">
 							<img src="/images/garrafa.svg" alt="" class="equivalence-icon">
 						</div>
-					
-					</div>
-		        </div>
 
-		    </div>
+					</div>
+				</div>
+
+			</div>
 		</div>
-	
+
 	</main>
 
-	<dialog id="profile_dialog">
-	    <button onclick="this.closest('dialog').close()">Fechar</button>
-	    <form id="profile_form">
-	        <input type="text" name="name" placeholder="Seu nome">
-	        <input type="email" name="email" placeholder="Seu E-mail">
-	        <input type="password" name="password" placeholder="****">
-	        <input type="number" name="staff_count" placeholder="Numero de funcionarios">
-	        <input type="number" name="digital_staff_count" placeholder="Numero de funcionarios com cartão digital">
-
-	        <select name="state" id="state">
-	            <option value="">Selecione o estado</option>
-	        </select>
-
-	        <select name="city" id="city" disabled>
-	            <option value="">Selecione a cidade</option>
-	        </select>
-
-	        <button type="submit">Enviar</button>
-	    </form>
-		<p id="error" class="error-message"></p>
-	</dialog>
-
-	<script type="module" src="js/index.js"></script>
 </body>
 
 </html>

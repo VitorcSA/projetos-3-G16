@@ -11,39 +11,41 @@
 </head>
 
 <body>
-	
+
 	<main>
 		<div class="background-image"></div>
-		
+
 		<div class="auth-container">
-						
+
 			<img src="/images/logo.svg" alt="Logo edenred" class="logo">
-		        
-		    <h1 class="auth-title">Entrar na conta</h1>
-		        
-		    <form id="login_form" class="auth-form">
-		    	<div class="input-group">
-		        	<label for="email">Email corporativo</label>
-		            <input type="email" id="email" name="email" placeholder="Adicionar email corporativo" required>
-		    	</div>
 
-		        <div class="input-group">
-		        	<label for="password">Senha</label>
-		            <input type="password" id="password" name="password" placeholder="••••••••" required>
-		        </div>
+			<h1 class="auth-title">Entrar na conta</h1>
 
-		        <button type="submit" class="btn-primary">Entrar na calculadora</button>
-		    </form>
+			<form id="login_form" class="auth-form">
+				<div class="input-group">
+					<label for="email">Email corporativo</label>
+					<input type="email" id="email" name="email"
+						placeholder="Adicionar email corporativo" required>
+				</div>
+
+				<div class="input-group">
+					<label for="password">Senha</label>
+					<input type="password" id="password" name="password" placeholder="••••••••"
+						required>
+				</div>
+
+				<button type="submit" class="btn-primary">Entrar na calculadora</button>
+			</form>
 
 			<p class="redirection-text">
 				Não tem uma conta? <a href="/register" class="redirection-link">Registrar-se</a>
 			</p>
-				
+
 			<p id="error" class="error-message"></p>
-	
+
 		</div>
 	</main>
-	
+
 	<script>
 		document.getElementById("login_form").addEventListener('submit', function (data) {
 			data.preventDefault();
