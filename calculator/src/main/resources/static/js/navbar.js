@@ -64,7 +64,7 @@ form.addEventListener('submit', event => {
 	}).then(async response => {
 		const text = await response.text();
 		if (response.ok) {
-			alert(text);
+			location.reload();
 		} else {
 			document.getElementById('profile-error').innerText = text;
 		}

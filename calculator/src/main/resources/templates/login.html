@@ -64,7 +64,6 @@
 				const text = await res.text();
 
 				if (res.ok) {
-					alert(text);
 					window.location.href = '/';
 				} else {
 					document.getElementById("error").innerText = text;
