@@ -30,8 +30,8 @@ public class PrivatePageController{
 	
     @GetMapping("/")
     public String home(@ModelAttribute("user") User user, Model model) throws Exception {
-        CalculationResponseDTO dados = calculatorService.calculate(user);
-        model.addAttribute("dados", dados);
+        CalculationResponseDTO data = calculatorService.calculate(user);
+        model.addAttribute("calculation", data);
         return "index";
     }
 	

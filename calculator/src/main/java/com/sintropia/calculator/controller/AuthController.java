@@ -1,9 +1,7 @@
 package com.sintropia.calculator.controller;
 
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseCookie;
+
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,11 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sintropia.calculator.dto.request.LoginDTO;
 import com.sintropia.calculator.dto.request.RegisterRequestDTO;
-import com.sintropia.calculator.model.Address;
-import com.sintropia.calculator.model.User;
 import com.sintropia.calculator.service.AuthService;
-import com.sintropia.calculator.service.JwtService;
-import com.sintropia.calculator.service.UserService;
 
 import jakarta.servlet.http.HttpServletResponse;
 

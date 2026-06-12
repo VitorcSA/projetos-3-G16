@@ -9,6 +9,19 @@
 	<link rel="stylesheet" href="/css/navbar.css">
 	<link rel="stylesheet" href="/css/index.css">
 	<script src="/js/navbar.js" type="module"></script>
+
+	<script th:inline="javascript">
+		const data = {
+			annualPhysicEmission: /*[[${calculation.annualPhysicEmission}]]*/ 0,
+			annualDigitalEmission: /*[[${calculation.annualDigitalEmission}]]*/ 0,
+			moneyWasted: /*[[${calculation.moneyWasted}]]*/ 0,
+			transportEmissionPercentage: /*[[${calculation.transportEmissionPercentage}]]*/ 0,
+			productionEmissionPercentage: /*[[${calculation.productionEmissionPercentage}]]*/ 0,
+			disposalEmissionPercentage: /*[[${calculation.disposalEmissionPercentage}]]*/ 0,
+			cardCount: /*[[${calculation.cardCount}]]*/ 0
+		};
+	</script>
+
 </head>
 
 <body>
@@ -28,10 +41,10 @@
 				</div>
 				<p class="card-label">Cartão Físico</p>
 				<h2 class="card-value"
-					th:text="${#numbers.formatDecimal(dados.annualPhysicEmission, 1, 'POINT', 2, 'COMMA')} + ' kg'">
+					th:text="${#numbers.formatDecimal(calculation.annualPhysicEmission, 1, 'POINT', 2, 'COMMA')} + ' kg'">
 					...</h2>
 				<p class="card-description"
-					th:text="'Equivalente a ' + ${dados.cardCount} + ' cartões'"></p>
+					th:text="'Equivalente a ' + ${calculation.cardCount} + ' cartões'"></p>
 			</div>
 
 			<div class="info-card" id="digital_box">
@@ -40,7 +53,7 @@
 				</div>
 				<p class="card-label">Cartão Digital</p>
 				<h2 class="card-value"
-					th:text="${#numbers.formatDecimal(dados.annualDigitalEmission, 1, 'POINT', 2, 'COMMA')} + ' kg'">
+					th:text="${#numbers.formatDecimal(calculation.annualDigitalEmission, 1, 'POINT', 2, 'COMMA')} + ' kg'">
 					...</h2>
 				<p class="card-description">Emitidos por cartão Digital</p>
 			</div>
@@ -51,7 +64,7 @@
 				</div>
 				<p class="card-label">Economia de emissões</p>
 				<h2 class="card-value"
-					th:text="${#numbers.formatDecimal(dados.annualPhysicEmission - dados.annualDigitalEmission, 1, 'POINT', 2, 'COMMA')} + ' kg'">
+					th:text="${#numbers.formatDecimal(calculation.annualPhysicEmission - calculation.annualDigitalEmission, 1, 'POINT', 2, 'COMMA')} + ' kg'">
 					...</h2>
 				<p class="card-description">CO₂ evitado por ano</p>
 			</div>
@@ -62,7 +75,7 @@
 				</div>
 				<p class="card-label">Dinheiro gasto</p>
 				<h2 class="card-value"
-					th:text="'R$ ' + ${#numbers.formatDecimal(dados.moneyWasted, 1, 'POINT', 2, 'COMMA')}">
+					th:text="'R$ ' + ${#numbers.formatDecimal(calculation.moneyWasted, 1, 'POINT', 2, 'COMMA')}">
 					...</h2>
 				<p class="card-description">reais em produção de cartão</p>
 			</div>
