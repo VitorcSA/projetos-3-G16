@@ -8,6 +8,7 @@
 	<link rel="stylesheet" href="/css/global.css">
 	<link rel="stylesheet" href="/css/navbar.css">
 	<link rel="stylesheet" href="/css/index.css">
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 	<script src="/js/navbar.js" type="module"></script>
 
 	<script th:inline="javascript">
@@ -21,7 +22,7 @@
 			cardCount: /*[[${calculation.cardCount}]]*/ 0
 		};
 	</script>
-
+	<script src="/js/index.js" type="module"></script>
 </head>
 
 <body>
@@ -93,27 +94,61 @@
 
 				<div class="chart-card side-chart">
 					<h3>Origem das emissões</h3>
-					<canvas id="donutChart"></canvas>
+					<div class="donut-wrapper">
+						<canvas id="donutChart"></canvas>
+						<div class="donut-legend">
+							<div class="legend-item">
+								<span class="legend-bar"
+									style="background:#3D52A0"></span>
+								<span class="legend-percent" style="background:#3D52A0"
+									th:text="${#numbers.formatDecimal(calculation.transportEmissionPercentage, 1, 'POINT', 1, 'COMMA')} + '%'">
+									60%</span>
+								<span class="legend-label">Transporte</span>
+							</div>
+							<div class="legend-item">
+								<span class="legend-bar"
+									style="background:#7091E6"></span>
+								<span class="legend-percent" style="background:#7091E6"
+									th:text="${#numbers.formatDecimal(calculation.productionEmissionPercentage, 1, 'POINT', 1, 'COMMA')} + '%'">
+									40%</span>
+								<span class="legend-label">Produção</span>
+							</div>
+							<div class="legend-item">
+								<span class="legend-bar"
+									style="background:#C5CAE9"></span>
+								<span class="legend-percent" style="background:#C5CAE9"
+									th:text="${#numbers.formatDecimal(calculation.disposalEmissionPercentage, 1, 'POINT', 1, 'COMMA')} + '%'">
+									20%</span>
+								<span class="legend-label">Descarte</span>
+							</div>
+						</div>
+					</div>
 				</div>
 
 				<div class="chart-card side-chart">
 					<h3>Equivalências</h3>
 					<p class="subtitle">CO₂ evitado por ano</p>
-
 					<div class="equivalences-wrapper">
 						<div class="equivalences-container" id="water_equivalence">
 							<img src="/images/gota.svg" alt="" class="equivalence-icon">
+							<span class="equivalence-value" id="eq-water">-</span>
+							<span class="equivalence-label">L de água preservados</span>
 						</div>
 						<div class="equivalences-container" id="tree_equivalence">
 							<img src="/images/arvore.svg" alt="" class="equivalence-icon">
+							<span class="equivalence-value" id="eq-trees">-</span>
+							<span class="equivalence-label">Árvores preservadas</span>
 						</div>
 						<div class="equivalences-container" id="gasoline_equivalence">
 							<img src="/images/carro.svg" alt="" class="equivalence-icon">
+							<span class="equivalence-value" id="eq-gasoline">-</span>
+							<span class="equivalence-label">L de gasolina preservados</span>
 						</div>
 						<div class="equivalences-container" id="bottles_equivalence">
 							<img src="/images/garrafa.svg" alt="" class="equivalence-icon">
+							<span class="equivalence-value" id="eq-bottles">-</span>
+							<span class="equivalence-label">garrafas pet preservadas</span>
 						</div>
-
 					</div>
 				</div>
 

@@ -1,94 +1,98 @@
-
-.navbar{
+.navbar {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	
+
 	width: 100%;
 	height: 8%;
 	max-height: 84px;
-	
+
 	background-color: #FFFF;
 	padding: 0 52px;
 	position: relative;
 }
 
-.navbar-logo{
+.navbar-logo {
 	max-width: 132px;
-	max-height: 85px;
+	max-height: 84px;
+	flex-shrink: 0;
 }
 
 .navbar-nav {
 	display: flex;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+	white-space: nowrap;
 	gap: 13px;
 }
 
 .nav-link {
-    color: var(--text-color);
-    text-decoration: none;
-    
-    padding-bottom: 4px;
-    border-bottom: 2px solid transparent;
-    
-    transition: border-color 0.2s ease;
+	color: var(--text-color);
+	text-decoration: none;
+
+	padding-bottom: 4px;
+	border-bottom: 2px solid transparent;
+
+	transition: border-color 0.2s ease;
 }
 
 .nav-link:hover {
-    border-bottom-color: rgba(40, 167, 69, 0.5);
+	border-bottom-color: rgba(40, 167, 69, 0.5);
 }
 
 .nav-link.active {
-    border-bottom-color: #28a745;
+	border-bottom-color: #28a745;
 }
 
-.navbar-actions{
+.navbar-actions {
 	display: flex;
 	align-items: center;
 	gap: 10px;
+	flex-shrink: 0;
 }
 
 .navbar-divider {
-    width: 2px;
-    height: 25px;
-    background-color: #000000;
+	width: 2px;
+	height: 25px;
+	background-color: #000000;
 	border-radius: 999px;
 }
 
-.navbar-buttons{
+.navbar-buttons {
 	display: flex;
 	gap: 10px;
 }
 
 .company-avatar {
-    width: 44px;
-    height: 44px;
-    background-color: var(--primary-color);
-    border-radius: 50%;
-    flex-shrink: 0; 
+	width: 44px;
+	height: 44px;
+	background-color: var(--primary-color);
+	border-radius: 50%;
+	flex-shrink: 0;
 }
 
 .navbar-company {
-    display: flex;
-    align-items: center;  
-    gap: 12px;
+	display: flex;
+	align-items: center;
+	gap: 12px;
 }
 
 .company-info {
-    display: flex;
-    flex-direction: column;
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
 }
 
 .company-name {
-    font-weight: bold;
-    font-size: 14px;
-    color: #333;
+	font-weight: bold;
+	font-size: 14px;
+	color: #333;
+	text-overflow: ellipsis;
 }
 
 .company-email {
-    font-size: 12px;
-    color: #6c757d; 
+	font-size: 12px;
+	color: #6c757d;
+	text-overflow: ellipsis;
 }
-

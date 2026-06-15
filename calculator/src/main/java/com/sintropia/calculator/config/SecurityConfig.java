@@ -35,6 +35,7 @@ public class SecurityConfig{
 					"/api/auth/register",
 					"/register",
 					"/login",
+					"/error",
 					"/error/**",
 					"/css/**",
 					"/js/**",

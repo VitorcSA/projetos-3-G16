@@ -1,68 +1,68 @@
-.main-content{
+.main-content {
 	display: flex;
 	flex-direction: column;
-	
+
 	padding: 23px 43px;
 	gap: 25px;
 }
 
 
 .welcome-title {
-    font-size: 24px;
-    color: var(--text-color);
-    font-size: 32px;
+	font-size: 24px;
+	color: var(--text-color);
+	font-size: 32px;
 }
 
 .welcome-subtitle {
-    color: var(--primary-color);
+	color: var(--primary-color);
 }
 
 .cards-section {
-    display: flex;          
+	display: flex;
 	justify-content: space-between;
-    gap: 19px;
-    width: 100%;
-    
-    flex-wrap: wrap;
+	gap: 19px;
+	width: 100%;
+
+	flex-wrap: wrap;
 }
 
 .info-card {
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
-    width: 321px;
-    height: 200px;
-    border-radius: 16px;
+	width: 321px;
+	height: 200px;
+	border-radius: 16px;
 	padding: 20px;
-	
+
 	background: #FFFFFF;
-    
-    border: 1px solid var(--border-color);
-    
-    box-sizing: border-box; 
+
+	border: 1px solid var(--border-color);
+
+	box-sizing: border-box;
 }
 
 .icon-wrapper {
-    width: 40px;
-    height: 40px;
-    background-color: #E4FDF5;
-    border-radius: 50%;
-    
-    display: flex;
-    align-items: center;
-    justify-content: center;
+	width: 40px;
+	height: 40px;
+	background-color: #E4FDF5;
+	border-radius: 50%;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .card-icon {
-    width: 24px;
-	height: 24px; 
-    
-    object-fit: contain; 
+	width: 24px;
+	height: 24px;
+
+	object-fit: contain;
 }
 
 #physical_box .icon-wrapper {
 
-    background-color: #FFF3F1; 
+	background-color: #FFF3F1;
 }
 
 .card-label {
@@ -78,31 +78,35 @@
 }
 
 .dashboard-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr; 
-    gap: 24px; 
-    width: 100%;
+	display: grid;
+	grid-template-columns: 2fr 1fr;
+	gap: 24px;
+	width: 100%;
+	height: 52%;
 }
 
 .side-column {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
 }
 
 .chart-card {
 	display: flex;
-    flex-direction: column;
+	flex-direction: column;
 	background: #FFFFFF;
-    border: 1px solid #9FA9A3; 
-    border-radius: 16px;
-    padding: 24px;
-    box-sizing: border-box;
+	border: 1px solid #9FA9A3;
+	border-radius: 16px;
+	padding: 24px;
+	box-sizing: border-box;
 }
 
 .main-chart {
-	width: 769px;
-	height: 540px;
+	width: 53%;
+	height: 100%;
+
+	max-width: 769px;
+	max-height: 540px;
 }
 
 .side-chart {
@@ -119,3 +123,80 @@
 	height: 131px;
 }
 
+.donut-wrapper {
+	display: flex;
+	align-items: center;
+	gap: 33px;
+}
+
+#donutChart {
+	max-width: 140px;
+	max-height: 140px;
+}
+
+.donut-legend {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	flex: 1;
+}
+
+
+.legend-item {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.legend-bar {
+	width: 4px;
+	height: 36px;
+	border-radius: 999px;
+}
+
+.legend-percent {
+	color: white;
+	font-weight: 600;
+	font-size: 14px;
+	padding: 4px 10px;
+	border-radius: 6px;
+	min-width: 48px;
+	text-align: center;
+}
+
+.legend-label {
+	font-size: 14px;
+	color: var(--text-color);
+}
+
+.equivalences-wrapper {
+	display: flex;
+	flex: 1;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.equivalences-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 6px;
+	flex: 1;
+}
+
+.equivalence-icon {
+	width: 52px;
+	height: 52px;
+}
+
+.equivalence-value {
+	font-size: 16px;
+	font-weight: 600;
+	color: var(--text-color);
+}
+
+.equivalence-label {
+	font-size: 11px;
+	color: #6c757d;
+	text-align: center;
+}
