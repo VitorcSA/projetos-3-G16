@@ -36,7 +36,7 @@ public class PrivatePageController{
     }
 	
 	@GetMapping("/history")
-	public String history() {
+	public String history(@ModelAttribute("user") User user) {
 		return "history";
 	}
 	

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Metas</title>
+	<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+	<link rel="stylesheet" href="/css/global.css">
+	<link rel="stylesheet" href="/css/navbar.css">
+	<link rel="stylesheet" href="/css/dashboard.css">
+	<link rel="stylesheet" href="/css/history.css">
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<script src="/js/navbar.js" type="module"></script>
+	<script src="/js/history.js" type="module"></script>
+</head>
+
+<body>
+	<header th:replace="~{fragments :: navbar}"></header>
+
+	<main class="main-content">
+		<section class="welcome-section">
+			<h1 class="welcome-title">
+				Dashboard / <span class="welcome-subtitle">Historico e Metas</span>
+			</h1>
+		</section>
+
+		<section id="calculation_info" class="cards-section">
+			<div class="info-card" id="migration_box">
+				<div class="icon-wrapper">
+					<img src="/images/cartao.svg" alt="" class="card-icon">
+				</div>
+				<p class="card-label">Índice de migração digital</p>
+				<h2 class="card-value" th:text="'-'"></h2>
+				<p class="card-description">CO₂ evitado por ano</p>
+			</div>
+
+			<div class="info-card" id="digital_box">
+				<div class="icon-wrapper">
+					<img src="/images/digital.svg" alt="" class="card-icon">
+				</div>
+				<p class="card-label">Funcionarios so digitais</p>
+				<h2 class="card-value" th:text="'-'"></h2>
+				<p class="card-description"></p>
+			</div>
+
+			<div class="info-card" id="saved_box">
+				<div class="icon-wrapper">
+					<img src="/images/cloud.svg" alt="" class="card-icon">
+				</div>
+				<p class="card-label">CO₂ Evitado Acumulado</p>
+				<h2 class="card-value" th:text="'-'"></h2>
+				<p class="card-description">CO₂ evitado por ano</p>
+			</div>
+		</section>
+
+		<div id="dashboard_grid" class="dashboard-grid">
+
+			<div class="chart-card main-chart">
+				<h3>Registro de emissões</h3>
+				<p class="chart-card__label main-chart__label">CO₂ evitado por ano</p>
+				<canvas id="mainChart"></canvas>
+			</div>
+
+
+			<!-- Card de metas e evolução -->
+			<div class="chart-card goals-card">
+				<div class="goals-card__info">
+					<div class="goals-card__header">
+						<h3 class="goals-card__title">Metas e evolução</h3>
+						<p class="chart-card__label goals-card__subtitle">Historia de registro
+						</p>
+					</div>
+
+					<div class="goals-card__stats">
+						<div class="goals-card__stat">
+							<h1 class="goals-card__stat-value">X%</h1>
+							<p class="goals-card__stat-label">descrição</p>
+							<div class="goals-card__stat-divider"></div>
+						</div>
+
+						<div class="goals-card__stat">
+							<h1 class="goals-card__stat-value">X%</h1>
+							<p class="goals-card__stat-label">descrição</p>
+							<div class="goals-card_-stat-divider"></div>
+						</div>
+
+						<div class="goals-card__stat">
+							<h1 class="content">X%</h1>
+							<p class="description">descrição</p>
+							<div class="text-decoration"></div>
+						</div>
+					</div>
+				</div>
+				<canvas id="evolution_canvas"></canvas>
+			</div>
+		</div>
+	</main>
+
+</body>
+
+</html>
