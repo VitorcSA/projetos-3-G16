@@ -1,1 +1,7 @@
-
+.welcome-section__add-register-btn {
+	background-color: #FFFFFF;
+	color: var(--text-clor);
+	width: 173px;
+	height: 56px;
+	border: none
+}

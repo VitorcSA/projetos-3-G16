@@ -5,8 +5,11 @@
 }
 
 .welcome-section {
+	display: flex;
+	justify-content: space-between;
 	padding: 24px 54px;
 }
+
 
 .welcome-title {
 	color: var(--text-color);
