@@ -55,10 +55,14 @@
 
 		<div id="dashboard_grid" class="dashboard-grid">
 
-			<div class="chart-card main-chart">
+			<div class="chart-card">
 				<h3>Registro de emissões</h3>
 				<p class="chart-card__label main-chart__label">CO₂ evitado por ano</p>
-				<canvas id="mainChart"></canvas>
+
+				<div class="chart-card__container">
+					<canvas id="mainChart"></canvas>
+				</div>
+
 			</div>
 
 
@@ -91,7 +95,9 @@
 						</div>
 					</div>
 				</div>
-				<canvas id="evolution_canvas"></canvas>
+				<div class="chart-card__container">
+					<canvas id="evolution_canvas"></canvas>
+				</div>
 			</div>
 		</div>
 	</main>

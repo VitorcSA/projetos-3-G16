@@ -10,49 +10,14 @@
 	background-color: #FFF3F1;
 }
 
-.card-label {
-	font-size: 20px;
-}
-
-.card-value {
-	font-size: 32px;
-}
-
-.card-description {
-	font-size: 16px;
-}
-
-.dashboard-grid {
-	display: grid;
-	grid-template-columns: 2fr 1fr;
-	gap: 24px;
-	width: 100%;
-	height: 52%;
-}
-
 .side-column {
 	display: flex;
 	flex-direction: column;
 	gap: 24px;
 }
 
-.chart-card {
-	display: flex;
-	flex-direction: column;
-	background: #FFFFFF;
-	border: 1px solid #9FA9A3;
-	border-radius: 16px;
-	padding: 24px;
-	box-sizing: border-box;
-}
 
-.main-chart {
-	width: 53%;
-	height: 100%;
 
-	max-width: 769px;
-	max-height: 540px;
-}
 
 .side-chart {
 	width: 548px;

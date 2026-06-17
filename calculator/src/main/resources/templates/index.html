@@ -85,10 +85,13 @@
 
 		<div id="dashboard_grid" class="dashboard-grid">
 
-			<div class="chart-card main-chart">
+			<div class="chart-card">
 				<h3>Economia de emissões</h3>
 				<p class="subtitle">CO₂ evitado por ano</p>
-				<canvas id="mainChart"></canvas>
+
+				<div class="chart-card__container">
+					<canvas id="mainChart"></canvas>
+				</div>
 			</div>
 
 			<div class="side-column">
@@ -96,7 +99,10 @@
 				<div class="chart-card side-chart">
 					<h3>Origem das emissões</h3>
 					<div class="donut-wrapper">
-						<canvas id="donutChart"></canvas>
+
+						<div class="chart-card__container">
+							<canvas id="donutChart"></canvas>
+						</div>
 						<div class="donut-legend">
 							<div class="legend-item">
 								<span class="legend-bar"
