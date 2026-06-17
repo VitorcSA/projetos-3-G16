@@ -67,19 +67,26 @@
 			<p id="profile-error" class="error-message"></p>
 		</dialog>
 
-		<dialog id="export-modal" class="modal">
+		<dialog id="export-modal" class="modal modal--export">
 			<button onclick="this.closest('dialog').close()" class="modal__close-btn"
 				aria-label="Fechar"></button>
 
 			<div class="modal__content">
-				<label for="dashboard-selection" class="modal__title">Exportar Dashboard</label>
+				<h2 class="modal__title">Exportar Dashboard</h2>
+
 				<select id="dashboard-selection" class="modal__select">
 					<option value="">Selecionar Dashboard</option>
 				</select>
 
 				<div class="modal__actions">
-					<button id="btn-export-excel" class="button">Exportar como tabela</button>
-					<button id="btn-export-image" class="buttons">Exportar como imagem</button>
+					<button id="btn-export-excel" class="button button--export">
+						<img src="/images/icone_excel.svg" alt="" class="button__icon">
+						<span>Exportar como tabela</span>
+					</button>
+					<button id="btn-export-image" class="button button--export">
+						<img src="/images/icone_png.svg" alt="" class="button__icon">
+						<span>Exportar como Imagem</span>
+					</button>
 				</div>
 			</div>
 

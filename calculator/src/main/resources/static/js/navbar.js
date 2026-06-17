@@ -72,3 +72,111 @@ form.addEventListener('submit', event => {
 		alert('Erro');
 	});
 });
+
+const exportModal = document.getElementById('export-modal');
+const dashboardSelect = document.getElementById('dashboard-selection');
+const btnExportExcel = document.getElementById('btn-export-excel');
+const btnExportImage = document.getElementById('btn-export-image');
+const exportError = document.getElementById('export-error');
+
+let dashboards = [];
+
+async function loadDashboards(select) {
+	try {
+		const response = await fetch('/api/dashboards');
+		if (!response.ok) throw new Error(`HTTP ${response.status}`);
+		dashboards = await response.json();
+
+		select.innerHTML = '<option value="">Selecionar Dashboard</option>';
+
+		dashboards.forEach(dashboard => {
+			const option = document.createElement('option');
+			option.value = dashboard.id;
+			option.innerText = dashboard.name;
+			select.appendChild(option);
+		});
+	} catch {
+		exportError.innerText = 'Erro ao carregar dashboards';
+	}
+}
+
+await loadDashboards(dashboardSelect);
+
+exportModal.addEventListener('close', () => {
+	exportError.innerText = '';
+	dashboardSelect.value = '';
+});
+
+function exportDashboardExcel(dashboardId) {
+	fetch(`/api/dashboards/${dashboardId}/export?format=excel`)
+		.then(async response => {
+			if (!response.ok) {
+				const text = await response.text();
+				throw new Error(text);
+			}
+			return response.blob();
+		})
+		.then(blob => {
+			const url = URL.createObjectURL(blob);
+			const link = document.createElement('a');
+			link.href = url;
+			link.download = 'dashboard.xlsx';
+			link.click();
+			URL.revokeObjectURL(url);
+			exportModal.close();
+		})
+		.catch(() => {
+			exportError.innerText = 'Erro ao exportar';
+		});
+}
+
+async function exportDashboardImage(dashboard) {
+	if (window.location.pathname !== dashboard.path) {
+		exportError.innerText = `Acesse a tela "${dashboard.name}" para exportar como imagem`;
+		return;
+	}
+
+	if (typeof html2canvas !== 'function') {
+		exportError.innerText = 'Exportação de imagem não disponível nesta página';
+		return;
+	}
+
+	const target = document.querySelector('.main-content');
+	if (!target) {
+		exportError.innerText = 'Erro ao exportar';
+		return;
+	}
+
+	try {
+		const canvas = await html2canvas(target);
+		const link = document.createElement('a');
+		link.href = canvas.toDataURL('image/png');
+		link.download = 'dashboard.png';
+		link.click();
+		exportModal.close();
+	} catch {
+		exportError.innerText = 'Erro ao exportar';
+	}
+}
+
+function handleExport(format) {
+	const dashboardId = dashboardSelect.value;
+
+	if (!dashboardId) {
+		exportError.innerText = 'Selecione um dashboard antes de exportar';
+		return;
+	}
+
+	exportError.innerText = '';
+
+	if (format === 'excel') {
+		exportDashboardExcel(dashboardId);
+		return;
+	}
+
+	const dashboard = dashboards.find(d => d.id === dashboardId);
+	exportDashboardImage(dashboard);
+}
+
+btnExportExcel.addEventListener('click', () => handleExport('excel'));
+btnExportImage.addEventListener('click', () => handleExport('image'));
