@@ -21,6 +21,7 @@ new Chart(donutCtx, {
 	},
 	options: {
 		responsive: true,
+		maintainAspectRatio: false,
 		cutout: '70%',
 		plugins: {
 			legend: {

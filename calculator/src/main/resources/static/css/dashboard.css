@@ -91,6 +91,8 @@
 	border: 1px solid #9FA9A3;
 	border-radius: 16px;
 	padding: 24px;
+	height: 100%;
+	min-height: 0;
 }
 
 
