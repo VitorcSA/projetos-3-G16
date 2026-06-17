@@ -76,6 +76,7 @@ form.addEventListener('submit', event => {
 const exportModal = document.getElementById('export-modal');
 const dashboardSelect = document.getElementById('dashboard-selection');
 const btnExportExcel = document.getElementById('btn-export-excel');
+const btnExportPdf = document.getElementById('btn-export-pdf');
 const btnExportImage = document.getElementById('btn-export-image');
 const exportError = document.getElementById('export-error');
 
@@ -107,8 +108,8 @@ exportModal.addEventListener('close', () => {
 	dashboardSelect.value = '';
 });
 
-function exportDashboardExcel(dashboardId) {
-	fetch(`/api/dashboards/${dashboardId}/export?format=excel`)
+function exportDashboardFile(dashboardId, format, filename) {
+	fetch(`/api/dashboards/${dashboardId}/export?format=${format}`)
 		.then(async response => {
 			if (!response.ok) {
 				const text = await response.text();
@@ -120,7 +121,7 @@ function exportDashboardExcel(dashboardId) {
 			const url = URL.createObjectURL(blob);
 			const link = document.createElement('a');
 			link.href = url;
-			link.download = 'dashboard.xlsx';
+			link.download = filename;
 			link.click();
 			URL.revokeObjectURL(url);
 			exportModal.close();
@@ -170,7 +171,12 @@ function handleExport(format) {
 	exportError.innerText = '';
 
 	if (format === 'excel') {
-		exportDashboardExcel(dashboardId);
+		exportDashboardFile(dashboardId, 'excel', 'dashboard.xlsx');
+		return;
+	}
+
+	if (format === 'pdf') {
+		exportDashboardFile(dashboardId, 'pdf', 'dashboard.pdf');
 		return;
 	}
 
@@ -179,4 +185,5 @@ function handleExport(format) {
 }
 
 btnExportExcel.addEventListener('click', () => handleExport('excel'));
+btnExportPdf.addEventListener('click', () => handleExport('pdf'));
 btnExportImage.addEventListener('click', () => handleExport('image'));
