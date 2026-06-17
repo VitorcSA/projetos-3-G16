@@ -34,8 +34,20 @@
 					<img src="/images/cartao.svg" alt="" class="card-icon">
 				</div>
 				<p class="card-label">Índice de migração digital</p>
-				<h2 class="card-value" th:text="'-'"></h2>
-				<p class="card-description">CO₂ evitado por ano</p>
+
+				<th:block th:if="${user.digitalCardStaffCount != null}">
+					<h2 class="card-value"
+						th:text="${user.digitalCardStaffCount / user.staffCount * 100} + '%'">
+					</h2>
+					<p class="card-description">CO₂ evitado por ano</p>
+				</th:block>
+
+				<th:block th:unless="${user.digitalCardStaffCount != null}">
+					<div class="empty-state">
+						<p>Dados pendentes</p>
+					</div>
+				</th:block>
+
 			</div>
 
 			<div class="info-card" id="digital_box">
@@ -43,8 +55,18 @@
 					<img src="/images/digital.svg" alt="" class="card-icon">
 				</div>
 				<p class="card-label">Funcionarios so digitais</p>
-				<h2 class="card-value" th:text="'-'"></h2>
-				<p class="card-description"></p>
+				<th:block th:if="${user.digitalCardStaffCount != null}">
+					<h2 class="card-value" th:text="${user.digitalCardStaffCount}"></h2>
+					<p class="card-description" th:text="'de ' + ${user.staffCount} + ' no total'">
+					</p>
+				</th:block>
+
+				<th:block th:unless="${user.digitalCardStaffCount != null}">
+					<div class="empty-state">
+						<p>Dados Pendentes</p>
+					</div>
+				</th:block>
+
 			</div>
 
 			<div class="info-card" id="saved_box">
@@ -52,8 +74,15 @@
 					<img src="/images/cloud.svg" alt="" class="card-icon">
 				</div>
 				<p class="card-label">CO₂ Evitado Acumulado</p>
-				<h2 class="card-value" th:text="'-'"></h2>
-				<p class="card-description">CO₂ evitado por ano</p>
+				<th:block th:if="${user.digitalCardStaffCount != null}">
+					<h2 class="card-value" th:text="${emission}"></h2>
+					<p class="card-description">CO₂ evitado por ano</p>
+				</th:block>
+				<th:block th:unless="${user.digitalCardStaffCount}">
+					<div class="empty-state">
+						<p>Dados Pendentes</p>
+					</div>
+				</th:block>
 			</div>
 		</section>
 

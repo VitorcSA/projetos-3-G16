@@ -3,6 +3,7 @@ package com.sintropia.calculator.service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.sintropia.calculator.dto.UserDTO;
 import com.sintropia.calculator.dto.request.LoginDTO;
 import com.sintropia.calculator.dto.request.RegisterRequestDTO;
 import com.sintropia.calculator.exception.BusinessException;
@@ -24,7 +25,7 @@ public class AuthService {
 	}
 	
 	public String login(LoginDTO loginDTO) throws InvalidCredentialsException {
-		User user = userService.findByEmail(loginDTO.email());
+		User user = userService.getUserEntityByEmail(loginDTO.email());
 		
 		if(user == null) throw new InvalidCredentialsException();
 	
@@ -51,8 +52,7 @@ public class AuthService {
 		User user = new User(registerDTO.name(), registerDTO.email(), registerDTO.password(), registerDTO.staffCount(), address);
 		
 		if (registerDTO.digitalCardStaffCount() != null && registerDTO.staffCount() != null && registerDTO.staffCount() > 0) {
-			double percentage = ((double) registerDTO.digitalCardStaffCount() / registerDTO.staffCount()) * 100.0;
-			user.setDigitalPercentage(percentage);
+			user.setDigitalStaffCount(registerDTO.digitalCardStaffCount());
 		}
 
 		userService.register(user);

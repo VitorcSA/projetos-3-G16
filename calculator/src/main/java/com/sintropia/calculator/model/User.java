@@ -32,7 +32,7 @@ public class User{
 	private Address address;
 	
 	@Column(nullable = true)
-	private Double digitalPercentage;
+	private Long digitalStaffCount;
 
 	public User(){}
 
@@ -44,10 +44,9 @@ public class User{
 		this.address = address;
 	}
 	
-	public User(String name,String email,String password,Integer staffCount,Address address,Double 
-			porcentOfDigital){
+	public User(String name,String email,String password,Integer staffCount,Address address,Long digitalStaffCount){
 		this(name,email,password,staffCount,address);
-		this.digitalPercentage = porcentOfDigital;
+		this.digitalStaffCount = digitalStaffCount;
 	}
 
 	public Long getId(){
@@ -91,11 +90,11 @@ public class User{
 	public void setAddress(Address address){
 		this.address = address;
 	}
-	public void setDigitalPercentage(Double porcentOfDigital){
-		this.digitalPercentage = porcentOfDigital;
+	public void setDigitalStaffCount(Long digitalStaffCount){
+		this.digitalStaffCount = digitalStaffCount;
 	}
-	public Double getDigitalPercentage(){
-		return this.digitalPercentage;
+	public Long getDigitalStaffCount(){
+		return this.digitalStaffCount;
 	}
 	
 }

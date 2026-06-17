@@ -2,26 +2,33 @@ package com.sintropia.calculator.service;
 
 import java.util.function.Consumer;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import com.sintropia.calculator.dto.UserDTO;
 import com.sintropia.calculator.dto.request.RegisterRequestDTO;
+import com.sintropia.calculator.mapper.UserMapper;
 import com.sintropia.calculator.model.Address;
 import com.sintropia.calculator.model.User;
 import com.sintropia.calculator.repository.UserRepository;
-import org.springframework.util.StringUtils;
 
 @Service
 public class UserService{
 
-	@Autowired
-	private UserRepository repository;
+	private final UserRepository repository;
+	
+	private final UserMapper mapper;
 
-	@Autowired
-	private BCryptPasswordEncoder encoder;
+	private final BCryptPasswordEncoder encoder;
 
-	public User register(User user){
+	public UserService(UserRepository repository,UserMapper mapper,BCryptPasswordEncoder encoder) {
+		this.repository = repository;
+		this.mapper = mapper;
+		this.encoder = encoder;
+	}
+	
+	public UserDTO register(User user){
 
 		if(repository.existsByEmail(user.getEmail())){
 			throw new IllegalArgumentException("Este e-mail já existe");
@@ -34,10 +41,10 @@ public class UserService{
 		String password = encoder.encode(user.getPassword());
 		user.setPassword(password);
 	
-		return repository.save(user);
+		return mapper.toDTO(repository.save(user));
 	}
 	
-	public User updateProfile(String currentEmail, RegisterRequestDTO data) {
+	public UserDTO updateProfile(String currentEmail, RegisterRequestDTO data) {
 		User user = repository.findByEmail(currentEmail).orElseThrow(() -> new RuntimeException("Usuario não encontrado"));
 		
 		if (StringUtils.hasText(data.email()) && !user.getEmail().equals(data.email())) {
@@ -51,9 +58,8 @@ public class UserService{
 		updateIfValid(data.password(), pwd -> user.setPassword(encoder.encode(pwd)));
 		
 		if (data.staffCount() != null) user.setStaffCount(data.staffCount());
-		if (data.digitalCardStaffCount() != null && user.getStaffCount() > 0) {
-		    user.setDigitalPercentage(((double) data.digitalCardStaffCount() / user.getStaffCount()) * 100);
-		}
+		
+		if (data.digitalCardStaffCount() != null && user.getStaffCount() > 0) user.setDigitalStaffCount(data.digitalCardStaffCount());
 		
 		if (data.address() != null) {
 			if (user.getAddress() == null) user.setAddress(new Address());
@@ -64,7 +70,7 @@ public class UserService{
 			updateIfValid(data.address().state(), address::setState);
 		}
 		
-		return repository.save(user);
+		return mapper.toDTO(repository.save(user));
 	}
 	
 	private void updateIfValid(String value,Consumer<String> setter) {
@@ -73,12 +79,20 @@ public class UserService{
 		}
 	}
 
-	public User findByEmail(String email){
-		return repository.findByEmail(email).orElse(null);
+	public UserDTO findByEmail(String email){
+		return mapper.toDTO(getUserEntityByEmail(email));
 	}
 
-	public User findByName(String name) {
-		return repository.findByName(name).orElse(null);
+	public UserDTO findByName(String name) {
+		return mapper.toDTO(getUserEntityByName(name));
 	}
+	
+	public User getUserEntityByEmail(String email) {
+        return repository.findByEmail(email).orElse(null);
+    }
+	
+	public User getUserEntityByName(String name) {
+        return repository.findByName(name).orElse(null);
+    }
 	
 }

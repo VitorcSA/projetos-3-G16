@@ -1,9 +1,11 @@
 package com.sintropia.calculator.service;
 
 import org.springframework.stereotype.Service;
+
+import com.sintropia.calculator.dto.AddressDTO;
+import com.sintropia.calculator.dto.UserDTO;
 import com.sintropia.calculator.dto.response.CalculationResponseDTO;
 import com.sintropia.calculator.model.Coordinates;
-import com.sintropia.calculator.model.User;
 
 @Service
 public class CalculatorService {
@@ -42,14 +44,14 @@ public class CalculatorService {
         this.addressService = addressService;
     }
 
-    public CalculationResponseDTO calculate(User user) throws Exception {
+    public CalculationResponseDTO calculate(UserDTO user) throws Exception {
         Coordinates userCoords = addressService.getCoordinates(
-            user.getAddress().getCity(),
-            user.getAddress().getState()
+            user.address().city(),
+            user.address().state()
         );
 
         double distanceKm = addressService.getClosestFactoryDistance(userCoords);
-        int cardCount = user.getStaffCount();
+        int cardCount = user.staffCount();
 
         double productionEmission   = calculateProductionEmission(cardCount);
         double transportEmission    = calculateTransportEmission(cardCount, distanceKm);
@@ -74,20 +76,34 @@ public class CalculatorService {
             cardCount
         );
     }
+    
+    public double calculateAnualPhysicEmission(long numberOfCards,AddressDTO address) throws Exception {
+    	if(address == null) return 0.0d;
+    	
+    	Coordinates coordinates = addressService.getCoordinates(address.city(), address.state());
+    	
+    	double distanceKm = addressService.getClosestFactoryDistance(coordinates);
+    	
+    	double productionEmission = calculateProductionEmission(numberOfCards);
+    	double transportEmission = calculateTransportEmission(numberOfCards, distanceKm);
+    	double transactionEmission = calculateTransactionEmission(numberOfCards);
+    	
+    	return productionEmission + transportEmission + transactionEmission;
+    }
 
-    private double calculateProductionEmission(int numberOfCards) {
+    private double calculateProductionEmission(long numberOfCards) {
         if (numberOfCards <= 0) return 0.0;
         double pvcEmission    = PHYSICAL_CARD_WEIGHT_KG * PVC_FACTOR * numberOfCards;
         double energyEmission = ENERGY_FACTOR * numberOfCards;
         return pvcEmission + energyEmission;
     }
 
-    private double calculateTransportEmission(int numberOfCards, double distanceKm) {
+    private double calculateTransportEmission(long numberOfCards, double distanceKm) {
         if (numberOfCards <= 0) return 0.0;
         return (PHYSICAL_CARD_WEIGHT_KG * numberOfCards / 1000.0) * distanceKm * TRANSPORT_FACTOR;
     }
 
-    private double calculateTransactionEmission(int numberOfCards) {
+    private double calculateTransactionEmission(long numberOfCards) {
         if (numberOfCards <= 0) return 0.0;
         return EMISSION_PER_TRANSACTION_KG * DEFAULT_ANNUAL_TRANSACTIONS_PER_STAFF * numberOfCards;
     }

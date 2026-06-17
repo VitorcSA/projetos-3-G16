@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sintropia.calculator.dto.AddressDTO;
+import com.sintropia.calculator.dto.UserDTO;
 import com.sintropia.calculator.dto.request.RegisterRequestDTO;
 import com.sintropia.calculator.dto.response.UserProfileDTO;
 import com.sintropia.calculator.model.User;
@@ -31,31 +32,13 @@ public class UserController extends AbstractController{
 
 	@GetMapping("/profile")
 	public ResponseEntity<?> getUserProfile(@AuthenticationPrincipal String email){
-		User user = userService.findByEmail(email);
+		UserDTO user = userService.findByEmail(email);
 		
 		if(user == null) {
 			return ResponseEntity.status(404).body("Usuario não encontrado");
 		}
-	
-		AddressDTO addressDTO = null;
-		if(user.getAddress() != null) {
-			addressDTO = new AddressDTO(
-					user.getAddress().getCity(),
-					user.getAddress().getState()
-			);
-		}
 		
-		Long digitalCardStaffCount = (user.getDigitalPercentage() != null) ? Math.round((user.getDigitalPercentage() * user.getStaffCount()) / 100.0) : null;
-		
-		UserProfileDTO profile = new UserProfileDTO(
-		        user.getName(),
-		        user.getEmail(),
-		        user.getStaffCount(),
-		        addressDTO,
-		        digitalCardStaffCount
-				);
-		
-		return ResponseEntity.ok(profile);
+		return ResponseEntity.ok(user);
 	}
 	
 	@PutMapping("/profile")
@@ -64,10 +47,10 @@ public class UserController extends AbstractController{
 			@RequestBody RegisterRequestDTO updatedProfile,
 			HttpServletResponse response){
 		try {
-			User user = userService.updateProfile(email, updatedProfile);
+			UserDTO user = userService.updateProfile(email, updatedProfile);
 
-			if (!user.getEmail().equals(email)) {
-			    String newToken = jwtService.generateToken(user.getEmail());
+			if (!user.email().equals(email)) {
+			    String newToken = jwtService.generateToken(user.email());
 			    addCookie(response, newToken);
 			}
 			

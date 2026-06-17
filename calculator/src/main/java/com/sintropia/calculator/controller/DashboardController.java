@@ -13,11 +13,16 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.sintropia.calculator.dto.UserDTO;
 import com.sintropia.calculator.dto.response.CalculationResponseDTO;
 import com.sintropia.calculator.dto.response.DashboardDTO;
-import com.sintropia.calculator.model.User;
+import com.sintropia.calculator.mapper.UserMapper;
 import com.sintropia.calculator.service.CalculatorService;
 import com.sintropia.calculator.service.UserService;
 
@@ -28,7 +33,7 @@ public class DashboardController {
 	private final UserService userService;
 	private final CalculatorService calculatorService;
 
-	public DashboardController(UserService userService, CalculatorService calculatorService) {
+	public DashboardController(UserService userService,CalculatorService calculatorService) {
 		this.userService = userService;
 		this.calculatorService = calculatorService;
 	}
@@ -54,7 +59,7 @@ public class DashboardController {
 			return ResponseEntity.badRequest().build();
 		}
 
-		User user = userService.findByEmail(email);
+		UserDTO user = userService.findByEmail(email);
 		CalculationResponseDTO data = calculatorService.calculate(user);
 		byte[] excelBytes = generateExcel(data);
 
