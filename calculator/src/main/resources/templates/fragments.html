@@ -102,8 +102,22 @@
 		</dialog>
 
 		<dialog id="info-modal" class="modal">
-			<button onclick="this.closest('dialog').close()" class="modal__close-btn"
-				aria-label="Fechar"></button>
+		    <button onclick="this.closest('dialog').close()" class="modal__close-btn"
+		        aria-label="Fechar"></button>
+
+		    <div class="modal__content">
+		        <h2 class="modal__title">Entendendo o cálculo</h2>
+
+		        <p>O cálculo de emissões considera três fatores principais:</p>
+
+		        <ul>
+		            <li><strong>Produção:</strong> emissões geradas na fabricação do cartão físico, considerando o peso em PVC e o consumo de energia.</li>
+		            <li><strong>Transporte:</strong> emissões geradas no envio dos cartões da fábrica até a empresa, com base na distância.</li>
+		            <li><strong>Descarte:</strong> emissões geradas por transações realizadas com o cartão ao longo do ano.</li>
+		        </ul>
+
+		        <p>A comparação com o cartão digital mostra a economia de CO₂ ao migrar para o formato digital.</p>
+		    </div>
 		</dialog>
 
 	</th:block>
