@@ -51,7 +51,7 @@ public class CalculatorService {
         );
 
         double distanceKm = addressService.getClosestFactoryDistance(userCoords);
-        int cardCount = user.staffCount();
+        long cardCount = user.staffCount();
 
         double productionEmission   = calculateProductionEmission(cardCount);
         double transportEmission    = calculateTransportEmission(cardCount, distanceKm);

@@ -1,5 +1,5 @@
 package com.sintropia.calculator.mapper;
 
-public interface Mapper<E, D> {
-	D toDTO(E entity);
+public interface Mapper<E, T> {
+	T toDTO(E entity);
 }

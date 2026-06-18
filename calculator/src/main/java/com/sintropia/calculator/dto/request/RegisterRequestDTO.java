@@ -7,7 +7,7 @@ public record RegisterRequestDTO(
 		String name,
 		String email,
 		String password,
-		@JsonProperty("staff_count") Integer staffCount,
+		@JsonProperty("staff_count") Long staffCount,
 		AddressDTO address,
 		@JsonProperty("digital_card_staff_count") Long digitalCardStaffCount) {
 }

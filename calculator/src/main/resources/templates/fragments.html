@@ -44,27 +44,31 @@
 			<button onclick="this.closest('dialog').close()" class="modal__close-btn"
 				aria-label="Fechar"></button>
 
-			<form id="profile-form" class="modal__form">
-				<input type="text" name="name" class="form__input" placeholder="Seu nome"
-					th:value="${user.name}">
-				<input type="email" name="email" class="form__input" placeholder="Seu E-mail"
-					th:value="${user.email}">
-				<input type="password" name="password" class="form__input" placeholder="****">
-				<input type="number" name="staff_count" class="form__input"
-					placeholder="Número de funcionários" th:value="${user.staffCount}">
-				<input type="number" name="digital_staff_count" class="form__input"
-					placeholder="Número de funcionários com cartão digital"
-					th:value="${user.digitalCardStaffCount}">
-				<select name="state" id="profile-state" class="form__select">
-					<option value="">Selecione o estado</option>
-				</select>
-				<select name="city" id="profile-city" class="form__select" disabled>
-					<option value="">Selecione a cidade</option>
-				</select>
-				<button type="submit" class="button button--primary">Enviar</button>
-			</form>
+			<div class="modal__content">
+				<h2 class="modal__label">Edite sua conta</h2>
+				<form id="profile-form" class="modal__form">
+					<input type="text" name="name" class="form__input modal__form--full"
+						placeholder="Seu nome" th:value="${user.name}">
+					<input type="email" name="email" class="form__input" placeholder="Seu E-mail"
+						th:value="${user.email}">
+					<input type="password" name="password" class="form__input" placeholder="****">
+					<input type="number" name="staff_count" class="form__input"
+						placeholder="Número de funcionários" th:value="${user.staffCount}">
+					<input type="number" name="digital_staff_count" class="form__input"
+						placeholder="Número de funcionários com cartão digital"
+						th:value="${user.digitalCardStaffCount}">
+					<select name="state" id="profile-state" class="form__select">
+						<option value="">Selecione o estado</option>
+					</select>
+					<select name="city" id="profile-city" class="form__select" disabled>
+						<option value="">Selecione a cidade</option>
+					</select>
+					<button type="submit"
+						class="button button--primary modal__form--full">Enviar</button>
+				</form>
 
-			<p id="profile-error" class="error-message"></p>
+				<p id="profile-error" class="error-message"></p>
+			</div>
 		</dialog>
 
 		<dialog id="export-modal" class="modal modal--export">
@@ -92,9 +96,9 @@
 						<span>Exportar como Imagem</span>
 					</button>
 				</div>
+				<p id="export-error" class="error-message"></p>
 			</div>
 
-			<p id="export-error" class="error-message"></p>
 		</dialog>
 
 		<dialog id="info-modal" class="modal">

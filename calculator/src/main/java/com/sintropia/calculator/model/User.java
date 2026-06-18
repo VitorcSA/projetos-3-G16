@@ -1,11 +1,16 @@
 package com.sintropia.calculator.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -25,7 +30,7 @@ public class User{
 	private String password;
 
 	@Column(nullable = false)
-	private Integer staffCount;
+	private Long staffCount;
 
 	@Embedded
 	@Column(nullable = false)
@@ -33,10 +38,13 @@ public class User{
 	
 	@Column(nullable = true)
 	private Long digitalStaffCount;
+	
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MonthlyRecord> monthlyRecords = new ArrayList<>();
 
 	public User(){}
 
-	public User(String name,String email,String password,Integer staffCount,Address address){
+	public User(String name,String email,String password,long staffCount,Address address){
 		this.name = name;
 		this.email = email;
 		this.password = password;
@@ -77,10 +85,10 @@ public class User{
 		this.password = password;
 	}
 
-	public int getStaffCount(){
+	public Long getStaffCount(){
 		return this.staffCount;
 	}
-	public void setStaffCount(int staffCount){
+	public void setStaffCount(Long staffCount){
 		this.staffCount = staffCount;
 	}
 
@@ -96,5 +104,13 @@ public class User{
 	public Long getDigitalStaffCount(){
 		return this.digitalStaffCount;
 	}
+	
+	public List<MonthlyRecord> getMonthlyRecords() {
+        return monthlyRecords;
+    }
+
+    public void setMonthlyRecords(List<MonthlyRecord> monthlyRecords) {
+        this.monthlyRecords = monthlyRecords;
+    }
 	
 }

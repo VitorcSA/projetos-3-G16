@@ -12,6 +12,12 @@
 	<link rel="stylesheet" href="/css/modal.css">
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 	<script src="/js/navbar.js" type="module"></script>
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+		window.monthly_records = /*[[${monthly_records}]]*/[];
+		window.current_goal_percentage = /*[[${goals != null ? goals.currentPercentage : 0}]]*/ 0;
+		/*]]>*/
+	</script>
 	<script src="/js/history.js" type="module"></script>
 </head>
 
@@ -37,9 +43,8 @@
 
 				<th:block th:if="${user.digitalCardStaffCount != null}">
 					<h2 class="card-value"
-						th:text="${user.digitalCardStaffCount / user.staffCount * 100} + '%'">
+						th:text="${#numbers.formatDecimal((user.digitalCardStaffCount * 100.0 / user.staffCount), 1, 0)} + '%'">
 					</h2>
-					<p class="card-description">CO₂ evitado por ano</p>
 				</th:block>
 
 				<th:block th:unless="${user.digitalCardStaffCount != null}">
@@ -75,7 +80,9 @@
 				</div>
 				<p class="card-label">CO₂ Evitado Acumulado</p>
 				<th:block th:if="${user.digitalCardStaffCount != null}">
-					<h2 class="card-value" th:text="${emission}"></h2>
+					<h2 class="card-value"
+						th:text="${#numbers.formatDecimal(emission, 1, 1)} + ' kg'">
+					</h2>
 					<p class="card-description">CO₂ evitado por ano</p>
 				</th:block>
 				<th:block th:unless="${user.digitalCardStaffCount}">
@@ -90,7 +97,6 @@
 
 			<div class="chart-card">
 				<h3>Registro de emissões</h3>
-				<p class="chart-card__label main-chart__label">CO₂ evitado por ano</p>
 
 				<div class="chart-card__container">
 					<canvas id="mainChart"></canvas>
@@ -101,35 +107,49 @@
 
 			<!-- Card de metas e evolução -->
 			<div class="chart-card goals-card">
+				<div class="goals-card__header">
+					<h3 class="goals-card__title">Metas e evolução</h3>
+					<p class="chart-card__label goals-card__subtitle">Histórico de registro
+					</p>
+				</div>
 				<div class="goals-card__info">
-					<div class="goals-card__header">
-						<h3 class="goals-card__title">Metas e evolução</h3>
-						<p class="chart-card__label goals-card__subtitle">Historia de registro
-						</p>
-					</div>
-
-					<div class="goals-card__stats">
+					<div th:if="${goals != null}" class="goals-card__stats">
 						<div class="goals-card__stat">
-							<h1 class="goals-card__stat-value">X%</h1>
-							<p class="goals-card__stat-label">descrição</p>
+							<h1 class="goals-card__stat-value">100%</h1>
+							<p class="goals-card__stat-label">da meta final</p>
 							<div class="goals-card__stat-divider"></div>
 						</div>
 
 						<div class="goals-card__stat">
-							<h1 class="goals-card__stat-value">X%</h1>
-							<p class="goals-card__stat-label">descrição</p>
-							<div class="goals-card_-stat-divider"></div>
+							<h1 class="goals-card__stat-value"
+								th:text="${#numbers.formatDecimal(goals.currentPercentage, 1, 0)} + '%'">
+								X%</h1>
+							<p class="goals-card__stat-label">Situação atual</p>
+							<div class="goals-card__stat-divider"></div>
 						</div>
 
 						<div class="goals-card__stat">
-							<h1 class="content">X%</h1>
-							<p class="description">descrição</p>
-							<div class="text-decoration"></div>
+							<h1 class="goals-card__stat-value"
+								th:text="${goals.remainingStaff}">X
+							</h1>
+							<p class="goals-card__stat-label">Funcionários para atingir meta
+							</p>
+							<div class="goals-card__stat-divider"></div>
 						</div>
 					</div>
-				</div>
-				<div class="chart-card__container">
-					<canvas id="evolution_canvas"></canvas>
+
+					<div th:unless="${goals != null}" class="goals-card__stats">
+						<p class="empty-state">Preencha seus dados para estipular metas.</p>
+					</div>
+					<div class="chart-card__container" style="position: relative;">
+						<canvas id="evolution_canvas"></canvas>
+						<div th:if="${goals != null}" class="chart-center-text"
+							style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; text-align: center;">
+							<h2 style="margin: 0; font-size: 24px; font-weight: bold; color: #333;"
+								th:text="${#numbers.formatDecimal(goals.currentPercentage, 1, 0)} + '%'">
+								0%</h2>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

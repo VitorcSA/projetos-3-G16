@@ -8,9 +8,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 
 import com.sintropia.calculator.dto.UserDTO;
 import com.sintropia.calculator.dto.response.CalculationResponseDTO;
-import com.sintropia.calculator.mapper.UserMapper;
-import com.sintropia.calculator.model.User;
 import com.sintropia.calculator.service.CalculatorService;
+import com.sintropia.calculator.service.GoalsService;
 import com.sintropia.calculator.service.UserService;
 
 
@@ -18,11 +17,13 @@ import com.sintropia.calculator.service.UserService;
 public class PrivatePageController{
 
 	private final UserService userService;
+	private final GoalsService goalsService;
 	private final CalculatorService calculatorService;
 	
 	
-	public PrivatePageController(UserService userService,CalculatorService calculatorService) {
+	public PrivatePageController(UserService userService,GoalsService goalsService,CalculatorService calculatorService) {
 		this.userService = userService;
+		this.goalsService = goalsService;
 		this.calculatorService = calculatorService;
 	}
 	
@@ -46,6 +47,8 @@ public class PrivatePageController{
 			emission = calculatorService.calculateAnualPhysicEmission(user.digitalCardStaffCount(),user.address());
 		
 		model.addAttribute("emission", emission);
+		model.addAttribute("monthly_records",user.monthlyRecords());
+		model.addAttribute("goals",goalsService.calculateGoals(user));
 
 		return "history";
 	}

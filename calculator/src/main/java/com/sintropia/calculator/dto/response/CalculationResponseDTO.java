@@ -11,5 +11,5 @@ public record CalculationResponseDTO(
 	    @JsonProperty("production_emission_percentage") double productionEmissionPercentage,
 	    @JsonProperty("disposal_emission_percentage") double disposalEmissionPercentage,
 	    
-	    @JsonProperty("card_count") int cardCount
+	    @JsonProperty("card_count") long cardCount
 ) {}

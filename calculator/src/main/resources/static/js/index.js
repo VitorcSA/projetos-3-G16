@@ -38,69 +38,71 @@ new Chart(donutCtx, {
 
 const mainCtx = document.getElementById('mainChart').getContext('2d');
 
-const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
-const mensal = (anual) => meses.map(() => +(anual / 12).toFixed(2));
-
-const fisico = mensal(data.annualPhysicEmission);
-const digital = mensal(data.annualDigitalEmission);
-const diferenca = fisico.map((v, i) => +(v - digital[i]).toFixed(2));
+const fisico = data.annualPhysicEmission;
+const digital = data.annualDigitalEmission;
+const economia = +(fisico - digital).toFixed(2);
+const percentual = +((economia / fisico) * 100).toFixed(1);
 
 new Chart(mainCtx, {
-	type: 'line',
+	type: 'bar',
 	data: {
-		labels: meses,
+		labels: ['Emissão com\ncartão físico', 'Emissão com\ncartão digital', 'Economia de\nemissões'],
 		datasets: [
 			{
-				label: 'Cartão Físico',
-				data: fisico,
-				borderColor: '#D52B1E',
-				backgroundColor: 'rgba(213, 43, 30, 0.08)',
-				fill: true,
-				tension: 0.4,
-				pointRadius: 4
-			},
-			{
-				label: 'Cartão Digital',
-				data: digital,
-				borderColor: '#277D5F',
-				backgroundColor: 'rgba(39, 125, 95, 0.08)',
-				fill: true,
-				tension: 0.4,
-				pointRadius: 4
-			},
-			{
-				label: 'Diferença (CO₂ evitado)',
-				data: diferenca,
-				borderColor: '#F5A623',
-				backgroundColor: 'rgba(245, 166, 35, 0.08)',
-				fill: true,
-				tension: 0.4,
-				pointRadius: 4,
-				borderDash: [6, 3] // ← linha tracejada para diferenciar
+				label: 'Emissões',
+				data: [fisico, digital, economia],
+				backgroundColor: ['rgba(180,180,180,0.5)', 'rgba(180,180,180,0.5)', 'rgba(100,120,220,0.5)'],
+				borderColor: ['rgba(180,180,180,0.8)', 'rgba(180,180,180,0.8)', 'rgba(100,120,220,0.9)'],
+				borderWidth: 1,
+				borderRadius: 4
 			}
 		]
 	},
 	options: {
 		responsive: true,
-		interaction: {
-			mode: 'index',
-			intersect: false // ← mostra tooltip de todas as linhas ao hover
-		},
 		plugins: {
-			legend: {
-				position: 'bottom'
-			},
+			legend: { display: false },
 			tooltip: {
 				callbacks: {
-					label: (ctx) => ` ${ctx.dataset.label}: ${ctx.parsed.y} kg`
+					label: (ctx) => ` ${ctx.parsed.y.toLocaleString('pt-BR')} kg CO₂`
+				}
+			},
+			annotation: {
+				annotations: {
+					refLine: {
+						type: 'line',
+						yMin: fisico,
+						yMax: fisico,
+						borderColor: 'rgba(100,120,220,0.4)',
+						borderWidth: 1.5,
+						borderDash: [6, 4]
+					},
+					label: {
+						type: 'label',
+						xValue: 2,
+						yValue: economia,
+						content: [`${percentual}%`],
+						backgroundColor: 'rgba(100,120,220,0.85)',
+						color: '#fff',
+						font: { size: 12, weight: 'bold' },
+						padding: { x: 8, y: 4 },
+						borderRadius: 4,
+						yAdjust: -16
+					}
 				}
 			}
 		},
 		scales: {
+			x: {
+				grid: { display: false }
+			},
 			y: {
 				beginAtZero: true,
 				ticks: {
-					callback: (v) => `${v} kg`
+					callback: (v) => `${v.toLocaleString('pt-BR')} kg`
+				},
+				grid: {
+					color: 'rgba(0,0,0,0.05)'
 				}
 			}
 		}
