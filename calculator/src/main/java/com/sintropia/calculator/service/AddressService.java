@@ -31,34 +31,49 @@ public class AddressService {
     private String contactEmail;
     
     public Coordinates getCoordinates(String city, String state) {
-        String url = "https://nominatim.openstreetmap.org/search?city="
-                + city + "&state=" + state + "&country=Brazil&format=json&limit=1";
-        
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("User-Agent", "Sintropia/1.0 (" + contactEmail + ")");
-    
-        HttpEntity<String> request = new HttpEntity<>(headers);
-        
         try {
+            String encodedCity = java.net.URLEncoder.encode(city, java.nio.charset.StandardCharsets.UTF_8);
+            String encodedState = java.net.URLEncoder.encode(state, java.nio.charset.StandardCharsets.UTF_8);
+
+            String url = "https://api.openrouteservice.org/geocode/search/structured?locality=" + encodedCity + "&region=" + encodedState + "&country=BR&size=1";
+            
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Authorization", apiKey);
+            HttpEntity<String> request = new HttpEntity<>(headers);
+            
             String body = restTemplate.exchange(url, HttpMethod.GET, request, String.class).getBody();
             JsonNode json = mapper.readTree(body);
+            JsonNode features = json.get("features");
             
-            if (json.isEmpty()) {
-                throw new RuntimeException("Localização não encontrada: " + city + ", " + state);
+            if (features != null && !features.isEmpty()) {
+                JsonNode coords = features.get(0).get("geometry").get("coordinates");
+                return new Coordinates(coords.get(1).asDouble(), coords.get(0).asDouble());
+            }
+
+            String openMeteoUrl = "https://geocoding-api.open-meteo.com/v1/search?name=" + encodedCity + "&count=1&language=pt";
+            String meteoBody = restTemplate.getForObject(openMeteoUrl, String.class);
+            JsonNode meteoJson = mapper.readTree(meteoBody);
+            
+            if (meteoJson.has("results") && !meteoJson.get("results").isEmpty()) {
+                double lat = meteoJson.get("results").get(0).get("latitude").asDouble();
+                double lon = meteoJson.get("results").get(0).get("longitude").asDouble();
+                return new Coordinates(lat, lon);
             }
             
-            Thread.sleep(1500);
-            
-            return new Coordinates(
-                    json.get(0).get("lat").asDouble(),
-                    json.get(0).get("lon").asDouble()
-            );
-            
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new RuntimeException("A requisição foi interrompida", e);
+                        String fallbackUrl = "https://api.openrouteservice.org/geocode/search?text=" + encodedCity + "&boundary.country=BR&size=1";
+            body = restTemplate.exchange(fallbackUrl, HttpMethod.GET, request, String.class).getBody();
+            json = mapper.readTree(body);
+            features = json.get("features");
+
+            if (features != null && !features.isEmpty()) {
+                JsonNode coords = features.get(0).get("geometry").get("coordinates");
+                return new Coordinates(coords.get(1).asDouble(), coords.get(0).asDouble());
+            }
+
+            throw new RuntimeException("Localização não encontrada em nenhuma API: " + city + ", " + state);
+
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao processar as coordenadas", e);
+            throw new RuntimeException("Erro na API de coordenadas para " + city + ": " + e.getMessage(), e);
         }
     }
     
