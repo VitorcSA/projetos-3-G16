@@ -11,9 +11,9 @@ new Chart(donutCtx, {
 				data.disposalEmissionPercentage
 			],
 			backgroundColor: [
-				'#3D52A0',  // azul escuro
-				'#7091E6',  // azul médio
-				'#C5CAE9'   // azul claro
+			    '#e63329',  // vermelho forte
+			    '#f0766d',  // vermelho médio
+			    '#fad1ce'   // vermelho claro
 			],
 			borderWidth: 0,
 			hoverOffset: 8
@@ -48,14 +48,14 @@ new Chart(mainCtx, {
 	data: {
 		labels: ['Emissão com\ncartão físico', 'Emissão com\ncartão digital', 'Economia de\nemissões'],
 		datasets: [
-			{
-				label: 'Emissões',
-				data: [fisico, digital, economia],
-				backgroundColor: ['rgba(180,180,180,0.5)', 'rgba(180,180,180,0.5)', 'rgba(100,120,220,0.5)'],
-				borderColor: ['rgba(180,180,180,0.8)', 'rgba(180,180,180,0.8)', 'rgba(100,120,220,0.9)'],
-				borderWidth: 1,
-				borderRadius: 4
-			}
+		    {
+		        label: 'Emissões',
+		        data: [fisico, digital, economia],
+		        backgroundColor: ['rgba(230,51,41,0.3)', 'rgba(230,51,41,0.5)', 'rgba(230,51,41,0.85)'],
+		        borderColor: ['rgba(230,51,41,0.5)', 'rgba(230,51,41,0.7)', 'rgba(230,51,41,0.9)'],
+		        borderWidth: 1,
+		        borderRadius: 4
+		    }
 		]
 	},
 	options: {
@@ -69,26 +69,26 @@ new Chart(mainCtx, {
 			},
 			annotation: {
 				annotations: {
-					refLine: {
-						type: 'line',
-						yMin: fisico,
-						yMax: fisico,
-						borderColor: 'rgba(100,120,220,0.4)',
-						borderWidth: 1.5,
-						borderDash: [6, 4]
-					},
-					label: {
-						type: 'label',
-						xValue: 2,
-						yValue: economia,
-						content: [`${percentual}%`],
-						backgroundColor: 'rgba(100,120,220,0.85)',
-						color: '#fff',
-						font: { size: 12, weight: 'bold' },
-						padding: { x: 8, y: 4 },
-						borderRadius: 4,
-						yAdjust: -16
-					}
+				    refLine: {
+				        type: 'line',
+				        yMin: fisico,
+				        yMax: fisico,
+				        borderColor: 'rgba(230,51,41,0.4)',
+				        borderWidth: 1.5,
+				        borderDash: [6, 4]
+				    },
+				    label: {
+				        type: 'label',
+				        xValue: 2,
+				        yValue: economia,
+				        content: [`${percentual}%`],
+				        backgroundColor: 'rgba(230,51,41,0.85)',
+				        color: '#fff',
+				        font: { size: 12, weight: 'bold' },
+				        padding: { x: 8, y: 4 },
+				        borderRadius: 4,
+				        yAdjust: -16
+				    }
 				}
 			}
 		},

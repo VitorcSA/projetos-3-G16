@@ -82,7 +82,7 @@ if (canvasRosca) {
 		data: {
 			datasets: [{
 				data: [percentage, restante],
-				backgroundColor: ['#5D6BF6', '#EAECEF'], borderWidth: 0,
+				backgroundColor: ['#e63329', '#EAECEF'], borderWidth: 0,
 				borderRadius: percentage > 0 ? [10, 0] : [0, 0]
 			}]
 		},

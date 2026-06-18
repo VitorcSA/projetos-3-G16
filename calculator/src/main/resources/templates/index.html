@@ -106,30 +106,30 @@
 							<canvas id="donutChart"></canvas>
 						</div>
 						<div class="donut-legend">
-							<div class="legend-item">
-								<span class="legend-bar"
-									style="background:#3D52A0"></span>
-								<span class="legend-percent" style="background:#3D52A0"
-									th:text="${#numbers.formatDecimal(calculation.transportEmissionPercentage, 1, 'POINT', 1, 'COMMA')} + '%'">
-									60%</span>
-								<span class="legend-label">Transporte</span>
-							</div>
-							<div class="legend-item">
-								<span class="legend-bar"
-									style="background:#7091E6"></span>
-								<span class="legend-percent" style="background:#7091E6"
-									th:text="${#numbers.formatDecimal(calculation.productionEmissionPercentage, 1, 'POINT', 1, 'COMMA')} + '%'">
-									40%</span>
-								<span class="legend-label">Produção</span>
-							</div>
-							<div class="legend-item">
-								<span class="legend-bar"
-									style="background:#C5CAE9"></span>
-								<span class="legend-percent" style="background:#C5CAE9"
-									th:text="${#numbers.formatDecimal(calculation.disposalEmissionPercentage, 1, 'POINT', 1, 'COMMA')} + '%'">
-									20%</span>
-								<span class="legend-label">Descarte</span>
-							</div>
+						    <div class="legend-item">
+						        <span class="legend-bar"
+						            style="background:#e63329"></span>
+						        <span class="legend-percent" style="background:#e63329"
+						            th:text="${#numbers.formatDecimal(calculation.transportEmissionPercentage, 1, 'POINT', 1, 'COMMA')} + '%'">
+						            60%</span>
+						        <span class="legend-label">Transporte</span>
+						    </div>
+						    <div class="legend-item">
+						        <span class="legend-bar"
+						            style="background:#f0766d"></span>
+						        <span class="legend-percent" style="background:#f0766d"
+						            th:text="${#numbers.formatDecimal(calculation.productionEmissionPercentage, 1, 'POINT', 1, 'COMMA')} + '%'">
+						            40%</span>
+						        <span class="legend-label">Produção</span>
+						    </div>
+						    <div class="legend-item">
+						        <span class="legend-bar"
+						            style="background:#fad1ce"></span>
+						        <span class="legend-percent" style="background:#fad1ce"
+						            th:text="${#numbers.formatDecimal(calculation.disposalEmissionPercentage, 1, 'POINT', 1, 'COMMA')} + '%'">
+						            20%</span>
+						        <span class="legend-label">Descarte</span>
+						    </div>
 						</div>
 					</div>
 				</div>
