@@ -28,14 +28,16 @@
 				<div class="navbar-divider"></div>
 
 				<div id="navigation_bar_info" class="navbar-company">
-					<div class="company-avatar"></div>
+				    <a href="/summary">
+				        <div class="company-avatar"></div>
+				    </a>
 
-					<div id="company_info" class="company-info">
-						<span id="company_name" class="company-name"
-							th:text="${user.name}">NomedaEmpresa</span>
-						<span id="company_email" class="company-email"
-							th:text="${user.email}">email@empresa.com</span>
-					</div>
+				    <div id="company_info" class="company-info">
+				        <span id="company_name" class="company-name"
+				            th:text="${user.name}">NomedaEmpresa</span>
+				        <span id="company_email" class="company-email"
+				            th:text="${user.email}">email@empresa.com</span>
+				    </div>
 				</div>
 			</div>
 		</header>
@@ -62,6 +64,17 @@
 					</select>
 					<select name="city" id="profile-city" class="form__select" disabled>
 						<option value="">Selecione a cidade</option>
+					</select>
+					<select name="industry_sector" id="profile-sector" class="form__select">
+					    <option value="">Selecione o setor</option>
+					    <option value="VAREJO">Varejo</option>
+					    <option value="SAUDE">Saúde</option>
+					    <option value="TECNOLOGIA">Tecnologia</option>
+					    <option value="INDUSTRIA">Indústria</option>
+					    <option value="FINANCEIRO">Financeiro</option>
+					    <option value="EDUCACAO">Educação</option>
+					    <option value="SERVICOS">Serviços</option>
+					    <option value="OUTRO">Outro</option>
 					</select>
 					<button type="submit"
 						class="button button--primary modal__form--full">Enviar</button>

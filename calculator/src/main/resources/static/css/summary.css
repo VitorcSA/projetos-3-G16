@@ -1,0 +1,261 @@
+/* ── Layout ── */
+.history-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	grid-template-rows: auto auto;
+	gap: 1.25rem;
+}
+
+.history-card {
+	background: #fff;
+	border-radius: 12px;
+	padding: 1.5rem;
+	border: 1px solid #e8e8e8;
+}
+
+/* Company card ocupa linha inteira na coluna esquerda, summary na direita */
+.company-card {
+	grid-column: 1;
+	grid-row: 1;
+}
+
+.summary-card {
+	grid-column: 2;
+	grid-row: 1;
+}
+
+/* Goals ocupa linha inteira embaixo */
+.goals-card {
+	grid-column: 1 / -1;
+	grid-row: 2;
+	background: #f5f5f5;
+}
+
+/* ── Company Header ── */
+.company-header {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	margin-bottom: 1rem;
+}
+
+.company-avatar-large {
+	width: 72px;
+	height: 72px;
+	border-radius: 50%;
+	background: #e0e0e0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23999'%3E%3Cpath d='M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z'/%3E%3C/svg%3E");
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: 40px;
+}
+
+.company-header h2 {
+	font-size: 1.3rem;
+	font-weight: 700;
+	color: #222;
+	margin: 0 0 0.4rem;
+}
+
+.company-meta {
+	display: flex;
+	gap: 1rem;
+	flex-wrap: wrap;
+}
+
+.company-meta span {
+	font-size: 0.8rem;
+	color: #666;
+}
+
+/* ── Quality Bar ── */
+.quality-score {
+	margin: 1rem 0;
+}
+
+.quality-score p {
+	font-size: 0.75rem;
+	color: #888;
+	margin-top: 0.35rem;
+}
+
+.quality-score-bar {
+	background: #e8e8e8;
+	border-radius: 99px;
+	height: 8px;
+	overflow: hidden;
+}
+
+.quality-score-fill {
+	height: 100%;
+	background: #e63329;
+	border-radius: 99px;
+	transition: width 0.6s ease;
+}
+
+/* ── Info Cards ── */
+.history-info-cards {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 0.75rem;
+	margin: 1rem 0;
+}
+
+.info-card {
+	background: #f5f5f5;
+	border-radius: 10px;
+	padding: 0.9rem 1rem;
+}
+
+.info-card .card-label {
+	font-size: 0.72rem;
+	color: #e63329;
+	font-weight: 600;
+	margin-bottom: 0.4rem;
+}
+
+.info-card h3 {
+	font-size: 1.2rem;
+	font-weight: 700;
+	color: #222;
+	margin: 0;
+}
+
+/* ── Observations ── */
+.observations-box .card-label {
+	font-size: 0.75rem;
+	color: #555;
+	font-weight: 600;
+	margin-bottom: 0.5rem;
+}
+
+.observations-box textarea {
+	width: 100%;
+	border: none;
+	background: #f5f5f5;
+	border-radius: 8px;
+	padding: 0.75rem;
+	font-size: 0.85rem;
+	color: #555;
+	resize: none;
+	height: 72px;
+	font-family: inherit;
+	box-sizing: border-box;
+}
+
+.observations-box textarea:focus {
+	outline: 2px solid #e63329;
+}
+
+/* ── Summary Card ── */
+.summary-card h2 {
+	font-size: 1.2rem;
+	font-weight: 700;
+	color: #222;
+	margin: 0 0 1rem;
+}
+
+.summary-card p {
+	font-size: 0.85rem;
+	color: #444;
+	line-height: 1.75;
+}
+
+/* ── Goals ── */
+.goals-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 1.25rem;
+}
+
+.goals-header h2 {
+	font-size: 1.2rem;
+	font-weight: 700;
+	color: #222;
+	margin: 0;
+}
+
+.goals-list {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 1rem;
+}
+
+.goal-card {
+	background: #fff;
+	border-radius: 10px;
+	padding: 1rem 1.1rem;
+	cursor: pointer;
+	transition: box-shadow 0.2s;
+}
+
+.goal-card:hover {
+	box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+.goal-card .card-label {
+	font-size: 0.78rem;
+	color: #555;
+	margin-bottom: 0.4rem;
+	font-weight: 600;
+}
+
+.goal-card h3 {
+	font-size: 1.4rem;
+	font-weight: 700;
+	color: #222;
+	margin: 0 0 0.5rem;
+}
+
+.goal-card .card-description {
+	font-size: 0.75rem;
+	color: #999;
+	margin-top: 0.4rem;
+}
+
+.goal-progress-bar {
+	background: #e8e8e8;
+	border-radius: 99px;
+	height: 6px;
+	overflow: hidden;
+}
+
+.goal-progress-fill {
+	height: 100%;
+	background: #28a745;
+	border-radius: 99px;
+	transition: width 0.6s ease;
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+	.history-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.company-card,
+	.summary-card,
+	.goals-card {
+		grid-column: 1;
+		grid-row: auto;
+	}
+
+	.goals-list {
+		grid-template-columns: 1fr 1fr;
+	}
+}
+
+@media (max-width: 600px) {
+	.history-info-cards {
+		grid-template-columns: 1fr;
+	}
+
+	.goals-list {
+		grid-template-columns: 1fr;
+	}
+}

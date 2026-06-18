@@ -28,6 +28,7 @@ if (form) {
 	form.addEventListener('submit', event => {
 		event.preventDefault();
 		const payload = {
+			industry_sector: form.industry_sector.value || null,
 			name: form.name.value,
 			email: form.email.value,
 			password: form.password.value,
@@ -39,6 +40,8 @@ if (form) {
 			digital_card_staff_count: form.digital_staff_count.value
 				? parseInt(form.digital_staff_count.value)
 				: null
+				
+			
 		};
 
 		fetch('/api/user/profile', {

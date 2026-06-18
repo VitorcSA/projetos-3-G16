@@ -33,12 +33,21 @@ public class UserController extends AbstractController{
 	@GetMapping("/profile")
 	public ResponseEntity<?> getUserProfile(@AuthenticationPrincipal String email){
 		UserDTO user = userService.findByEmail(email);
-		
+
 		if(user == null) {
 			return ResponseEntity.status(404).body("Usuario não encontrado");
 		}
-		
-		return ResponseEntity.ok(user);
+
+		UserProfileDTO profile = new UserProfileDTO(
+		        user.name(),
+		        user.email(),
+		        (int) user.staffCount(),
+		        user.address(),
+		        user.digitalCardStaffCount(),
+		        user.industrySector()
+				);
+
+		return ResponseEntity.ok(profile);
 	}
 	
 	@PutMapping("/profile")

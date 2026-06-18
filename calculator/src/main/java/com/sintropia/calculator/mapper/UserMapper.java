@@ -16,14 +16,14 @@ public class UserMapper implements Mapper<User, UserDTO>{
 	}
 
 	public UserDTO toDTO(User user) {
-		return user == null ? null : 
-			new UserDTO(
-					user.getName(),
-					user.getEmail(),
-					user.getStaffCount(),
-					addressMapper.toDTO(user.getAddress()),
-					user.getDigitalStaffCount(),
-					recordMapper.toDTO(user.getMonthlyRecords()));
+	    return user == null ? null : 
+	        new UserDTO(
+	                user.getName(),
+	                user.getEmail(),
+	                user.getStaffCount(),
+	                addressMapper.toDTO(user.getAddress()),
+	                user.getDigitalStaffCount(),
+	                recordMapper.toDTO(user.getMonthlyRecords()),
+	                user.getIndustrySector());
 	}
-	
 }

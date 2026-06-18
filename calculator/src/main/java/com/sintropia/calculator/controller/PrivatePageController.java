@@ -53,4 +53,9 @@ public class PrivatePageController{
 		return "history";
 	}
 	
+	@GetMapping("/summary")
+	public String summary(@ModelAttribute("user") UserDTO user) {
+	    return "summary";
+	}
+	
 }

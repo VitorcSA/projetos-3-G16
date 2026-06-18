@@ -107,4 +107,15 @@ public class CalculatorService {
         if (numberOfCards <= 0) return 0.0;
         return EMISSION_PER_TRANSACTION_KG * DEFAULT_ANNUAL_TRANSACTIONS_PER_STAFF * numberOfCards;
     }
+    
+    public double calculateAvoidedEmissionPerCard(double distanceKm) {
+        double productionPerCard = (PHYSICAL_CARD_WEIGHT_KG * PVC_FACTOR) + ENERGY_FACTOR;
+        double transportPerCard = (PHYSICAL_CARD_WEIGHT_KG / 1000.0) * distanceKm * TRANSPORT_FACTOR;
+        return (productionPerCard + transportPerCard) - DIGITAL_CARD_EMISSION_KG;
+    }
+
+    public double getDistanceForAddress(AddressDTO address) throws Exception {
+        Coordinates coordinates = addressService.getCoordinates(address.city(), address.state());
+        return addressService.getClosestFactoryDistance(coordinates);
+    }
 }

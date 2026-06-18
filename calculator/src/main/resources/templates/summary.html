@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Sumário - Sintropia</title>
+	<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+	<link rel="stylesheet" href="/css/global.css">
+	<link rel="stylesheet" href="/css/navbar.css">
+	<link rel="stylesheet" href="/css/dashboard.css">
+	<link rel="stylesheet" href="/css/summary.css">
+	<link rel="stylesheet" href="/css/modal.css">
+	<script src="/js/navbar.js" type="module"></script>
+	<script src="/js/summary.js" type="module"></script>
+	<style>
+		/* ── Layout ── */
+		.main-content {
+			padding: 2rem 2.5rem;
+			font-family: 'Inter', sans-serif;
+		}
+
+		.welcome-section {
+			margin-bottom: 1.5rem;
+		}
+
+		.welcome-title {
+			font-size: 1.1rem;
+			font-weight: 600;
+			color: #333;
+		}
+
+		.welcome-subtitle {
+			color: #888;
+			font-weight: 400;
+		}
+
+		/* ── Top grid: company card + summary ── */
+		.history-top {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 1.25rem;
+			margin-bottom: 1.25rem;
+		}
+
+		/* ── Company Card ── */
+		.company-card {
+			background: #fff;
+			border-radius: 12px;
+			padding: 1.5rem;
+			border: 1px solid #e8e8e8;
+		}
+
+		.company-header {
+			display: flex;
+			align-items: center;
+			gap: 1rem;
+			margin-bottom: 1rem;
+		}
+
+		.company-avatar-large {
+			width: 72px;
+			height: 72px;
+			border-radius: 50%;
+			background: #e0e0e0;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			flex-shrink: 0;
+		}
+
+		.company-avatar-large::after {
+			content: "";
+			display: block;
+			width: 36px;
+			height: 36px;
+			background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23999'%3E%3Cpath d='M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z'/%3E%3C/svg%3E") center/contain no-repeat;
+		}
+
+		.company-header-info h2 {
+			font-size: 1.3rem;
+			font-weight: 700;
+			color: #222;
+			margin: 0 0 0.4rem;
+		}
+
+		.company-meta {
+			display: flex;
+			gap: 1rem;
+			flex-wrap: wrap;
+		}
+
+		.company-meta span {
+			font-size: 0.8rem;
+			color: #666;
+		}
+
+		/* Quality bar */
+		.quality-score {
+			margin: 1rem 0;
+		}
+
+		.quality-score p {
+			font-size: 0.75rem;
+			color: #888;
+			margin-bottom: 0.35rem;
+		}
+
+		.quality-score-bar {
+			background: #e8e8e8;
+			border-radius: 99px;
+			height: 8px;
+			overflow: hidden;
+		}
+
+		.quality-score-fill {
+			height: 100%;
+			background: #e63329;
+			border-radius: 99px;
+			transition: width 0.6s ease;
+		}
+
+		/* Info cards row */
+		.history-info-cards {
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			gap: 0.75rem;
+			margin: 1rem 0;
+		}
+
+		.info-card-small {
+			background: #f5f5f5;
+			border-radius: 10px;
+			padding: 0.9rem 1rem;
+		}
+
+		.info-card-small .card-icon-row {
+			display: flex;
+			align-items: center;
+			gap: 0.4rem;
+			margin-bottom: 0.4rem;
+		}
+
+		.info-card-small .card-icon-dot {
+			width: 28px;
+			height: 28px;
+			border-radius: 50%;
+			background: #fde8e7;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.info-card-small .card-label {
+			font-size: 0.72rem;
+			color: #e63329;
+			font-weight: 600;
+		}
+
+		.info-card-small h3 {
+			font-size: 1.2rem;
+			font-weight: 700;
+			color: #222;
+			margin: 0;
+		}
+
+		/* Observations */
+		.observations-box .card-label {
+			font-size: 0.72rem;
+			color: #e63329;
+			font-weight: 600;
+			display: flex;
+			align-items: center;
+			gap: 0.4rem;
+			margin-bottom: 0.5rem;
+		}
+
+		.observations-box textarea {
+			width: 100%;
+			border: none;
+			background: #f5f5f5;
+			border-radius: 8px;
+			padding: 0.75rem;
+			font-size: 0.85rem;
+			color: #555;
+			resize: none;
+			height: 72px;
+			font-family: inherit;
+			box-sizing: border-box;
+		}
+
+		.observations-box textarea:focus {
+			outline: 2px solid #e63329;
+		}
+
+		/* ── Summary Card ── */
+		.summary-card {
+			background: #fff;
+			border-radius: 12px;
+			padding: 1.5rem;
+			border: 1px solid #e8e8e8;
+		}
+
+		.summary-card h2 {
+			font-size: 1.2rem;
+			font-weight: 700;
+			color: #222;
+			margin: 0 0 1rem;
+		}
+
+		.summary-card p {
+			font-size: 0.85rem;
+			color: #444;
+			line-height: 1.7;
+		}
+
+		/* ── Goals Card ── */
+		.goals-card {
+			background: #f5f5f5;
+			border-radius: 12px;
+			padding: 1.5rem;
+			border: 1px solid #e8e8e8;
+		}
+
+		.goals-header {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			margin-bottom: 1.25rem;
+		}
+
+		.goals-header h2 {
+			font-size: 1.2rem;
+			font-weight: 700;
+			color: #222;
+			margin: 0;
+		}
+
+		.goals-list {
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			gap: 1rem;
+		}
+
+		.goal-item {
+			background: #fff;
+			border-radius: 10px;
+			padding: 1rem 1.1rem;
+		}
+
+		.goal-item .goal-type {
+			display: flex;
+			align-items: center;
+			gap: 0.4rem;
+			font-size: 0.78rem;
+			color: #555;
+			margin-bottom: 0.5rem;
+		}
+
+		.goal-item .goal-type-dot {
+			width: 18px;
+			height: 18px;
+			border-radius: 50%;
+			background: #d4edda;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.goal-item .goal-type-dot::after {
+			content: "";
+			width: 8px;
+			height: 8px;
+			border-radius: 50%;
+			background: #28a745;
+			display: block;
+		}
+
+		.goal-item h3 {
+			font-size: 1.4rem;
+			font-weight: 700;
+			color: #222;
+			margin: 0 0 0.3rem;
+		}
+
+		.goal-item .goal-date {
+			font-size: 0.75rem;
+			color: #999;
+		}
+
+		/* ── Button ── */
+		.button--primary {
+			background: #e63329;
+			color: #fff;
+			border: none;
+			border-radius: 8px;
+			padding: 0.5rem 1rem;
+			font-size: 0.85rem;
+			font-weight: 600;
+			cursor: pointer;
+			transition: background 0.2s;
+		}
+
+		.button--primary:hover {
+			background: #c0271e;
+		}
+
+		.button--danger {
+			background: #fff;
+			color: #e63329;
+			border: 1px solid #e63329;
+			border-radius: 8px;
+			padding: 0.5rem 1rem;
+			font-size: 0.85rem;
+			font-weight: 600;
+			cursor: pointer;
+		}
+
+		/* ── Modal ── */
+		.error-message {
+			color: #e63329;
+			font-size: 0.8rem;
+			margin-top: 0.5rem;
+			min-height: 1rem;
+		}
+
+		@media (max-width: 900px) {
+			.history-top { grid-template-columns: 1fr; }
+			.goals-list { grid-template-columns: 1fr 1fr; }
+		}
+
+		@media (max-width: 600px) {
+			.history-info-cards { grid-template-columns: 1fr; }
+			.goals-list { grid-template-columns: 1fr; }
+		}
+	</style>
+</head>
+
+<body>
+	<header th:replace="~{fragments :: navbar}"></header>
+
+	<main class="main-content">
+		<section class="welcome-section">
+			<h1 class="welcome-title">
+				Dashboard / <span class="welcome-subtitle">Sumário</span>
+			</h1>
+		</section>
+
+		<!-- Top row: company + summary -->
+		<div class="history-top">
+
+			<!-- Company Card -->
+			<div class="company-card">
+				<div class="company-header">
+					<div class="company-avatar-large"></div>
+					<div class="company-header-info">
+						<h2 id="hist_company_name">Nome da Empresa</h2>
+						<div class="company-meta">
+							<span>🏷 <span id="hist_brand">Marca</span></span>
+							<span>🏭 <span id="hist_sector">Setor de indústria</span></span>
+							<span>📍 <span id="hist_location">Localização</span></span>
+						</div>
+					</div>
+				</div>
+
+				<div class="quality-score">
+					<p>Pontuação de qualidade</p>
+					<div class="quality-score-bar">
+						<div id="hist_quality_bar" class="quality-score-fill" style="width: 0%"></div>
+					</div>
+				</div>
+
+				<div class="history-info-cards">
+					<div class="info-card-small">
+						<div class="card-icon-row">
+							<div class="card-icon-dot">
+								<img src="/images/cartao.svg" alt="" width="14">
+							</div>
+							<span class="card-label">Cartão Físico</span>
+						</div>
+						<h3 id="hist_physical_emission">...</h3>
+					</div>
+					<div class="info-card-small">
+						<div class="card-icon-row">
+							<div class="card-icon-dot">
+								<img src="/images/digital.svg" alt="" width="14">
+							</div>
+							<span class="card-label">Cartão Digital</span>
+						</div>
+						<h3 id="hist_digital_emission">...</h3>
+					</div>
+					<div class="info-card-small">
+						<div class="card-icon-row">
+							<div class="card-icon-dot">
+								<img src="/images/cifrao.svg" alt="" width="14">
+							</div>
+							<span class="card-label">Dinheiro Gasto</span>
+						</div>
+						<h3 id="hist_money_wasted">...</h3>
+					</div>
+				</div>
+
+				<div class="observations-box">
+					<p class="card-label">
+						<span>🔴</span> Observações
+					</p>
+					<textarea id="hist_observations" placeholder="Digite algo ...."></textarea>
+				</div>
+			</div>
+
+			<!-- Summary Card -->
+			<div class="summary-card">
+				<h2>Sumário</h2>
+				<p id="hist_summary">Carregando...</p>
+			</div>
+
+		</div>
+
+		<!-- Goals Card -->
+		<div class="goals-card">
+			<div class="goals-header">
+				<h2>Metas Futuras</h2>
+				<button id="btn-add-goal" class="button button--primary">+ Nova Meta</button>
+			</div>
+			<div id="goals-list" class="goals-list"></div>
+		</div>
+
+	</main>
+
+	<!-- Goal Modal -->
+	<dialog id="goal-modal" class="modal">
+		<button onclick="this.closest('dialog').close()" class="modal__close-btn" aria-label="Fechar"></button>
+
+		<form id="goal-form" class="modal__form">
+			<input type="hidden" name="goal_id">
+
+			<select name="type" id="goal-type" class="form__select" required>
+				<option value="">Selecione o tipo de meta</option>
+				<option value="CO2_EVITADO_ACUMULADO">CO2 Evitado Acumulado</option>
+				<option value="INDICE_MIGRACAO_DIGITAL">Índice de Migração Digital</option>
+				<option value="DINHEIRO_ECONOMIZADO">Dinheiro Economizado</option>
+			</select>
+
+			<input type="number" name="target_value" step="0.01" class="form__input" placeholder="Valor alvo" required>
+			<input type="date" name="target_date" class="form__input" required>
+
+			<button type="submit" class="button button--primary">Salvar Meta</button>
+			<button type="button" id="btn-delete-goal" class="button button--danger" style="display:none;">Excluir Meta</button>
+		</form>
+
+		<p id="goal-error" class="error-message"></p>
+	</dialog>
+
+</body>
+
+</html>

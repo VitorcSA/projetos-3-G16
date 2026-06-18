@@ -12,10 +12,16 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 
 @Entity
 @Table(name = "users")
 public class User{
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "industry_sector")
+	private IndustrySector industrySector;
 	
 	@Id@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -111,6 +117,13 @@ public class User{
 
     public void setMonthlyRecords(List<MonthlyRecord> monthlyRecords) {
         this.monthlyRecords = monthlyRecords;
+    }
+    
+    public IndustrySector getIndustrySector() {
+        return this.industrySector;
+    }
+    public void setIndustrySector(IndustrySector industrySector) {
+        this.industrySector = industrySector;
     }
 	
 }

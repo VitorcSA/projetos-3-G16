@@ -61,6 +61,8 @@ public class UserService{
 		
 		if (data.digitalCardStaffCount() != null && user.getStaffCount() > 0) user.setDigitalStaffCount(data.digitalCardStaffCount());
 		
+		if (data.industrySector() != null) user.setIndustrySector(data.industrySector());
+		
 		if (data.address() != null) {
 			if (user.getAddress() == null) user.setAddress(new Address());
 			
