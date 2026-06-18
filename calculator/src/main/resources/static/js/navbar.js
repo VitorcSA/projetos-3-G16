@@ -135,8 +135,13 @@ async function exportDashboardImage(dashboard) {
 	}
 
 	if (typeof html2canvas !== 'function') {
-		if (exportError) exportError.innerText = 'Exportação de imagem não disponível nesta página';
-		return;
+		await new Promise((resolve, reject) => {
+			const script = document.createElement('script');
+			script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+			script.onload = resolve;
+			script.onerror = reject;
+			document.head.appendChild(script);
+		});
 	}
 
 	const target = document.querySelector('.main-content');
