@@ -191,7 +191,6 @@ if (btnExportImage) btnExportImage.addEventListener('click', () => handleExport(
 async function inicializarAplicacao() {
 	console.log("Iniciando scripts da aplicação...");
 
-	// Carrega os dashboards no modal
 	if (dashboardSelect) {
 		await loadDashboards(dashboardSelect);
 	}
