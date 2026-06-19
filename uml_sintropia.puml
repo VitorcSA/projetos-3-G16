@@ -1,0 +1,516 @@
+' UML gerado a partir do projeto projetos-3-G16 / calculator
+' Fonte editável PlantUML. O arquivo contém duas visões: arquitetura e classes.
+
+@startuml arquitetura_sintropia
+title Sintropia Calculator — Visão de Arquitetura
+skinparam shadowing false
+skinparam componentStyle rectangle
+skinparam packageStyle rectangle
+skinparam linetype ortho
+skinparam defaultFontName SansSerif
+left to right direction
+
+actor "Usuário / Navegador" as Usuario
+
+package "Camada Web" {
+  component "Controllers MVC/REST" as Controllers
+  component "Templates Thymeleaf\n+ JavaScript/CSS" as Views
+}
+
+package "Segurança" {
+  component "SecurityConfig" as SecurityConfig
+  component "JwtFilter" as JwtFilter
+  component "JwtService" as JwtService
+}
+
+package "Aplicação" {
+  component "Serviços de domínio" as Services
+  component "DashboardExportService" as ExportService
+  component "Exportadores\n(Strategy)" as Exporters
+  component "Mappers" as Mappers
+}
+
+package "Dados" {
+  component "Spring Data\nRepositories" as Repositories
+  component "Entidades JPA" as Entities
+  database "MySQL" as MySQL
+}
+
+package "Contratos" {
+  component "DTOs de requisição\ne resposta" as DTOs
+}
+
+cloud "OpenRouteService /\nOpen-Meteo" as GeoAPIs
+artifact "Arquivos PDF / XLSX" as Files
+
+Usuario --> JwtFilter : requisição + cookie JWT
+JwtFilter --> JwtService : valida token
+JwtFilter --> Repositories : verifica usuário
+JwtFilter --> Controllers : requisição autenticada
+SecurityConfig --> JwtFilter : registra filtro
+Controllers --> Services
+Controllers --> ExportService
+Controllers --> DTOs
+Controllers --> Views : renderiza páginas
+Services --> Repositories
+Services --> Mappers
+Services --> DTOs
+Services --> GeoAPIs : geocodificação e rotas
+Mappers --> Entities
+Mappers --> DTOs
+Repositories --> Entities
+Repositories --> MySQL
+ExportService --> Exporters : seleciona por dashboardId
+Exporters --> Services : cálculos e metas
+Exporters --> Files : gera relatório
+
+note bottom of Exporters
+Padrão Strategy:
+DashboardExporter é implementado por
+EmissaoPrevistaExporter e HistoricoMetasExporter.
+end note
+@enduml
+
+@startuml classes_sintropia
+title Sintropia Calculator — Diagrama de Classes
+skinparam shadowing false
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+skinparam defaultFontName SansSerif
+hide circle
+hide empty members
+top to bottom direction
+
+package "com.sintropia.calculator" as app_pkg {
+  class CalculatorApplication <<SpringBootApplication>> {
+    + {static} main(args: String[]): void
+  }
+}
+
+package "config" as config_pkg {
+  class SecurityConfig <<Configuration>> {
+    - jwtFilter: JwtFilter
+    + passwordEncoder(): BCryptPasswordEncoder
+    + filterChain(http: HttpSecurity): SecurityFilterChain
+  }
+}
+
+package "filter" as filter_pkg {
+  class JwtFilter <<Component / OncePerRequestFilter>> {
+    - jwtService: JwtService
+    - userRepository: UserRepository
+    # doFilterInternal(request, response, chain): void
+    # shouldNotFilter(request): boolean
+  }
+}
+
+package "controller" as controller_pkg {
+  abstract class AbstractController {
+    # addCookie(response: HttpServletResponse, token: String): void
+  }
+
+  class AuthController <<RestController>> {
+    - authService: AuthService
+    + login(request: LoginDTO, response): ResponseEntity<String>
+    + registerController(request: RegisterRequestDTO, response): ResponseEntity<String>
+    + validate(token: String): ResponseEntity<String>
+  }
+
+  class DashboardController <<RestController>> {
+    - userService: UserService
+    - exportService: DashboardExportService
+    + listDashboards(): ResponseEntity<List<DashboardResponseDTO>>
+    + exportDashboard(id: String, format: String, email: String): ResponseEntity<byte[]>
+  }
+
+  class GlobalExceptionHandler <<ControllerAdvice>> {
+    + handleNotFound(e): String
+    + handleNoResource(e): String
+    + handleRuntimeException(e): ResponseEntity<String>
+    + handleIllegalArgument(e): ResponseEntity<String>
+    + handleGenericException(e): ResponseEntity<String>
+  }
+
+  class PrivatePageController <<Controller>> {
+    - userService: UserService
+    - goalsService: GoalsService
+    - calculatorService: CalculatorService
+    + currentUser(email: String): UserDTO
+    + home(user: UserDTO, model: Model): String
+    + history(user: UserDTO, model: Model): String
+  }
+
+  class PublicPageController <<Controller>> {
+    + login(): String
+    + register(): String
+  }
+
+  class RecordRestController <<RestController>> {
+    - monthlyRecordService: MonthlyRecordService
+    - userService: UserService
+    + addOrUpdateRecord(email: String): ResponseEntity
+  }
+
+  class UserController <<RestController>> {
+    - userService: UserService
+    - jwtService: JwtService
+    + getUserProfile(email: String): ResponseEntity
+    + updateUserProfile(email: String, profile: RegisterRequestDTO, response): ResponseEntity<String>
+  }
+}
+
+package "service" as service_pkg {
+  class AddressService <<Service>> {
+    - apiKey: String
+    - contactEmail: String
+    + getCoordinates(city: String, state: String): Coordinates
+    + getDistanceHaversine(origin: Coordinates, destination: Coordinates): double
+    + getDistanceHaversine(origin: Coordinates, edenred: EdenredAddress): double
+    + getRealDistanceKm(origin: Coordinates, destination: Coordinates): double
+    + getRealDistanceKm(origin: Coordinates, edenred: EdenredAddress): double
+    + getClosestFactory(coordinates: Coordinates): EdenredAddress
+    + getClosestFactoryDistance(coordinates: Coordinates): double
+  }
+
+  class AuthService <<Service>> {
+    - jwtService: JwtService
+    - userService: UserService
+    - passwordEncoder: PasswordEncoder
+    + login(loginDTO: LoginDTO): String
+    + register(registerDTO: RegisterRequestDTO): String
+    + validate(token: String): boolean
+  }
+
+  class CalculatorService <<Service>> {
+    - addressService: AddressService
+    + calculate(user: UserDTO): CalculationResponseDTO
+    + calculateAnualPhysicEmission(numberOfCards: long, address: AddressDTO): double
+    - calculateProductionEmission(numberOfCards: long): double
+    - calculateTransportEmission(numberOfCards: long, distanceKm: double): double
+    - calculateTransactionEmission(numberOfCards: long): double
+  }
+
+  class DashboardExportService <<Service>> {
+    - exporters: Map<String, DashboardExporter>
+    + export(dashboardId: String, format: String, user: UserDTO): byte[]
+  }
+
+  class GoalsService <<Service>> {
+    + calculateGoals(user: UserDTO): DashboardGoalsDTO
+  }
+
+  class JwtService <<Component>> {
+    - secret: String
+    + generateToken(email: String): String
+    + extractEmail(token: String): String
+  }
+
+  class MonthlyRecordService <<Service>> {
+    - monthlyRecordRepository: MonthlyRecordRepository
+    + AddOrEditRegistry(user: User): MonthlyRecord
+  }
+
+  class UserService <<Service>> {
+    - repository: UserRepository
+    - mapper: UserMapper
+    - encoder: BCryptPasswordEncoder
+    + register(user: User): UserDTO
+    + updateProfile(currentEmail: String, data: RegisterRequestDTO): UserDTO
+    + findByEmail(email: String): UserDTO
+    + findByName(name: String): UserDTO
+    + getUserEntityByEmail(email: String): User
+    + getUserEntityByName(name: String): User
+  }
+}
+
+package "strategy" as strategy_pkg {
+  interface DashboardExporter <<Strategy>> {
+    + getDashboardId(): String
+    + exportExcel(user: UserDTO): byte[]
+    + exportPdf(user: UserDTO): byte[]
+  }
+
+  class EmissaoPrevistaExporter <<Component>> {
+    - calculatorService: CalculatorService
+    + getDashboardId(): String
+    + exportExcel(user: UserDTO): byte[]
+    + exportPdf(user: UserDTO): byte[]
+  }
+
+  class HistoricoMetasExporter <<Component>> {
+    - calculatorService: CalculatorService
+    - goalsService: GoalsService
+    + getDashboardId(): String
+    + exportExcel(user: UserDTO): byte[]
+    + exportPdf(user: UserDTO): byte[]
+  }
+}
+
+package "repository" as repository_pkg {
+  interface UserRepository <<Repository>> {
+    + existsByEmail(email: String): boolean
+    + existsByName(name: String): boolean
+    + findByEmail(email: String): Optional<User>
+    + findByName(name: String): Optional<User>
+  }
+
+  interface MonthlyRecordRepository <<Repository>> {
+    + findByUserAndMonthAndYear(userId: Long, month: int, year: int): Optional<MonthlyRecord>
+  }
+}
+
+package "mapper" as mapper_pkg {
+  interface "Mapper<E, T>" as Mapper {
+    + toDTO(entity: E): T
+  }
+
+  class AddressMapper <<Component>> {
+    + toDTO(address: Address): AddressDTO
+  }
+
+  class MonthlyRecordMapper <<Component>> {
+    + toDTO(record: MonthlyRecord): MonthlyRecordDTO
+    + toDTO(records: List<MonthlyRecord>): List<MonthlyRecordDTO>
+  }
+
+  class UserMapper <<Component>> {
+    - addressMapper: AddressMapper
+    - recordMapper: MonthlyRecordMapper
+    + toDTO(user: User): UserDTO
+  }
+}
+
+package "model" as model_pkg {
+  class User <<Entity>> {
+    - id: Long
+    - name: String
+    - email: String
+    - password: String
+    - staffCount: Long
+    - address: Address
+    - digitalStaffCount: Long
+    - monthlyRecords: List<MonthlyRecord>
+  }
+
+  class Address <<Embeddable>> {
+    - city: String
+    - state: String
+  }
+
+  class MonthlyRecord <<Entity>> {
+    - id: Long
+    - staffCount: Long
+    - digitalStaffCount: Long
+    - recordDate: LocalDate
+    - user: User
+  }
+
+  class Coordinates <<record>> {
+    + latitude: double
+    + longitude: double
+  }
+
+  enum EdenredAddress {
+    FACTORY_1
+    FACTORY_2
+    FACTORY_3
+    --
+    - city: String
+    - state: String
+    - coordinates: Coordinates
+    + getCoordinates(): Coordinates
+    + getCity(): String
+    + getState(): String
+  }
+}
+
+package "dto" as dto_pkg {
+  class AddressDTO <<record>> {
+    + city: String
+    + state: String
+  }
+
+  class DashboardGoalsDTO <<record>> {
+    + currentPercentage: double
+    + remainingStaff: long
+    + statusMessage: String
+  }
+
+  class MonthlyRecordDTO <<record>> {
+    + recordDate: LocalDate
+    + staffCount: Long
+    + digitalStaffCount: Long
+  }
+
+  class UserDTO <<record>> {
+    + name: String
+    + email: String
+    + staffCount: long
+    + address: AddressDTO
+    + digitalCardStaffCount: Long
+    + monthlyRecords: List<MonthlyRecordDTO>
+  }
+}
+
+package "dto.request" as request_pkg {
+  class LoginDTO <<record>> {
+    + email: String
+    + password: String
+  }
+
+  class RegisterRequestDTO <<record>> {
+    + name: String
+    + email: String
+    + password: String
+    + staffCount: Long
+    + address: AddressDTO
+    + digitalCardStaffCount: Long
+  }
+}
+
+package "dto.response" as response_pkg {
+  class CalculationResponseDTO <<record>> {
+    + annualPhysicEmission: double
+    + annualDigitalEmission: double
+    + moneyWasted: double
+    + transportEmissionPercentage: double
+    + productionEmissionPercentage: double
+    + disposalEmissionPercentage: double
+    + cardCount: long
+  }
+
+  class DashboardDTO <<record>> {
+    + id: String
+    + name: String
+    + path: String
+  }
+
+  class DashboardResponseDTO <<record>> {
+    + id: String
+    + name: String
+    + path: String
+  }
+
+  class UserProfileDTO <<record>> {
+    + name: String
+    + email: String
+    + staffCount: Integer
+    + address: AddressDTO
+    + digitalCardStaffCount: Long
+  }
+}
+
+package "exception" as exception_pkg {
+  class BusinessException <<RuntimeException>>
+  class InsufficientDataException <<RuntimeException>>
+  class InvalidCredentialsException <<RuntimeException>>
+}
+
+' Herança e implementação
+AuthController --|> AbstractController
+UserController --|> AbstractController
+AddressMapper ..|> Mapper
+MonthlyRecordMapper ..|> Mapper
+UserMapper ..|> Mapper
+EmissaoPrevistaExporter ..|> DashboardExporter
+HistoricoMetasExporter ..|> DashboardExporter
+
+' Modelo de domínio / persistência
+User "1" *-- "1" Address : address <<embedded>>
+User "1" *-- "0..*" MonthlyRecord : monthlyRecords\n<<cascade ALL>>
+EdenredAddress "1" *-- "1" Coordinates : coordinates
+
+' Composição entre DTOs
+UserDTO "1" *-- "1" AddressDTO : address
+UserDTO "1" *-- "0..*" MonthlyRecordDTO : monthlyRecords
+RegisterRequestDTO "1" *-- "1" AddressDTO : address
+UserProfileDTO "1" *-- "1" AddressDTO : address
+
+' Controladores -> serviços / contratos
+AuthController --> AuthService
+AuthController ..> LoginDTO
+AuthController ..> RegisterRequestDTO
+DashboardController --> UserService
+DashboardController --> DashboardExportService
+DashboardController ..> DashboardResponseDTO
+PrivatePageController --> UserService
+PrivatePageController --> GoalsService
+PrivatePageController --> CalculatorService
+PrivatePageController ..> UserDTO
+PrivatePageController ..> CalculationResponseDTO
+RecordRestController --> MonthlyRecordService
+RecordRestController --> UserService
+UserController --> UserService
+UserController --> JwtService
+UserController ..> RegisterRequestDTO
+UserController ..> UserDTO
+
+' Segurança
+SecurityConfig --> JwtFilter
+JwtFilter --> JwtService
+JwtFilter --> UserRepository
+
+' Serviços -> repositórios, mappers, modelos e DTOs
+AuthService --> JwtService
+AuthService --> UserService
+AuthService ..> LoginDTO
+AuthService ..> RegisterRequestDTO
+AuthService ..> User
+AuthService ..> Address
+CalculatorService --> AddressService
+CalculatorService ..> UserDTO
+CalculatorService ..> AddressDTO
+CalculatorService ..> CalculationResponseDTO
+CalculatorService ..> Coordinates
+AddressService ..> Coordinates
+AddressService ..> EdenredAddress
+GoalsService ..> UserDTO
+GoalsService ..> DashboardGoalsDTO
+MonthlyRecordService --> MonthlyRecordRepository
+MonthlyRecordService ..> User
+MonthlyRecordService ..> MonthlyRecord
+UserService --> UserRepository
+UserService --> UserMapper
+UserService ..> User
+UserService ..> UserDTO
+UserService ..> RegisterRequestDTO
+DashboardExportService "1" o-- "1..*" DashboardExporter : exporters
+DashboardExportService ..> UserDTO
+
+' Estratégias
+EmissaoPrevistaExporter --> CalculatorService
+EmissaoPrevistaExporter ..> UserDTO
+EmissaoPrevistaExporter ..> CalculationResponseDTO
+HistoricoMetasExporter --> CalculatorService
+HistoricoMetasExporter --> GoalsService
+HistoricoMetasExporter ..> UserDTO
+
+' Repositórios
+UserRepository ..> User : entidade
+MonthlyRecordRepository ..> MonthlyRecord : entidade
+
+' Mapeamento
+AddressMapper ..> Address
+AddressMapper ..> AddressDTO
+MonthlyRecordMapper ..> MonthlyRecord
+MonthlyRecordMapper ..> MonthlyRecordDTO
+UserMapper --> AddressMapper
+UserMapper --> MonthlyRecordMapper
+UserMapper ..> User
+UserMapper ..> UserDTO
+
+note right of User
+Getters, setters e construtores foram
+omitidos para melhorar a legibilidade.
+end note
+
+legend right
+  --|>   herança
+  ..|>   implementação
+  *--    composição
+  o--    agregação
+  -->    associação
+  ..>    dependência
+endlegend
+@enduml
